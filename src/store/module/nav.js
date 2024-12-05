@@ -1,11 +1,11 @@
 export default {
     namespaced: true,
     state: () => ({
-        navItems: [],
+        links: [],
     }),
     mutations: {
-        updateNavItems(state, navItems) {
-            state.navItems = navItems
+        updateNavItems(state, links) {
+            state.links = links
         },
     },
     actions: {
