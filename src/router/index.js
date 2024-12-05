@@ -5,6 +5,7 @@ import HomeView from "@/views/HomeView.vue";
 import VirusesView from '@/views/VirusesView.vue'
 import BankAccountView from '@/views/BankAccountView.vue'
 import ShopView from '@/views/ShopView.vue'
+import ShopLoginView from '@/views/ShopLoginView.vue'
 
 Vue.use(VueRouter)
 
@@ -26,13 +27,12 @@ const routes = [
         components: {
           center: HomeView,
         },
-        alias:'/shop'
       },
       {
         path: 'login',
         name: 'shoplogin',
         components: {
-          center: HomeView,
+          center: ShopLoginView,
         }
       },
       {

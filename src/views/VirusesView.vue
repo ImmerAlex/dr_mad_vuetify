@@ -61,8 +61,8 @@
         <td>{{virus.stock}}</td>
         <td>{{virus.price}}</td>
         <td class="d-flex gap-2">
-          <button class="btn btn-success" @click="prevent">edit</button>
-          <button class="btn btn-danger" @click="prevent">delete</button>
+          <button class="btn btn-success" >edit</button>
+          <button class="btn btn-danger" >delete</button>
         </td>
       </tr>
       </tbody>

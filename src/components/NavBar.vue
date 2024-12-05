@@ -5,7 +5,7 @@
       <v-toolbar-title>Dr Mad</v-toolbar-title>
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" absolute height="fit-content" temporary>
+    <v-navigation-drawer v-model="drawer" absolute height="100dvh" temporary>
       <v-list dense nav>
         <v-list-item-group active-class="primary--text text--accent-4">
 
@@ -31,6 +31,8 @@ export default {
     links: [
       {title: "Shop", icon: "mdi-cart", to: {name: "shopmain"}},
       {title: "Shop home", icon: "mdi-home", to: {name: "shophome"}},
+      {title: "Shop items", icon: "mdi-virus", to: {name: "shopitems"}},
+      {title: "Bank account", icon: "mdi-bank", to: {name: "bankaccount"}},
     ]
   }),
 };
