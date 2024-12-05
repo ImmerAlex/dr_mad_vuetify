@@ -5,7 +5,7 @@
       <v-toolbar-title>Dr Mad</v-toolbar-title>
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" absolute height="100dvh" temporary>
+    <v-navigation-drawer v-model="drawer" absolute height="fit-content" temporary>
       <v-list dense nav>
         <v-list-item-group active-class="primary--text text--accent-4">
 
@@ -28,12 +28,26 @@ export default {
   name: "NavBar",
   data: () => ({
     drawer: false,
-    links: [
-      {title: "Shop", icon: "mdi-cart", to: {name: "shopmain"}},
-      {title: "Shop home", icon: "mdi-home", to: {name: "shophome"}},
-      {title: "Shop items", icon: "mdi-virus", to: {name: "shopitems"}},
-      {title: "Bank account", icon: "mdi-bank", to: {name: "bankaccount"}},
-    ]
   }),
+  computed: {
+    links() {
+      const links = [];
+
+      if (this.loggedUser === undefined) {
+
+        links.push({ title: "Login", icon: "mdi-login", to: { 'name': 'login' } });
+        links.push({ title: "Register", icon: "mdi-account-plus", to: { 'name': 'register' } });
+
+      } else {
+
+        links.push({ title: "Home", icon: "mdi-home", to: { 'name': 'home' } });
+        links.push({ title: "Profile", icon: "mdi-account", to: { 'name': 'profile' } });
+        links.push({ title: "Logout", icon: "mdi-logout", to: { 'name': 'logout' } });
+
+      }
+
+      return links;
+    },
+  },
 };
 </script>
