@@ -8,12 +8,15 @@
     <v-navigation-drawer v-model="drawer" absolute height="fit-content" temporary>
       <v-list dense nav>
         <v-list-item-group active-class="primary--text text--accent-4">
-          <router-link v-for="link in links" :key="link.title" :to="link.to" tag="v-list-item" class="d-flex align-center">
+
+          <router-link v-for="link in links" :key="link.title" :to="link.to" class="d-flex align-center"
+                       tag="v-list-item">
             <v-list-item-icon>
               <v-icon>{{ link.icon }}</v-icon>
             </v-list-item-icon>
             <v-list-item-title>{{ link.title }}</v-list-item-title>
           </router-link>
+
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
@@ -26,12 +29,9 @@ export default {
   data: () => ({
     drawer: false,
     links: [
-      { title: "Home", icon: "mdi-home", to: { name: "home" } },
-      { title: "About", icon: "mdi-bank", to: { name: "about" } },
+      {title: "Shop", icon: "mdi-cart", to: {name: "shopmain"}},
+      {title: "Shop home", icon: "mdi-home", to: {name: "shophome"}},
     ]
   }),
 };
 </script>
-
-<style>
-</style>
