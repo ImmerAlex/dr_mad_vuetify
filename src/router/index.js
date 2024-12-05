@@ -2,7 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import HomeView from '../views/HomeView.vue'
-import AboutView from '../views/AboutView.vue'
+import ShopView from '@/views/ShopView.vue'
+import CardExemple from '@/components/CardExemple'
 
 Vue.use(VueRouter)
 
@@ -13,10 +14,20 @@ const routes = [
     component: HomeView
   },
   {
-    path: '/about',
-    name: 'about',
-    component: AboutView
+    path: '/shop',
+    name: 'shopmain',
+    component: ShopView,
+    children: [
+      {
+       path: 'home',
+        name: 'shophome',
+        components:{
+            center: CardExemple,
+        }
+      },
+    ]
   }
+
 ]
 
 const router = new VueRouter({

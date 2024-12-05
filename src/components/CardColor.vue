@@ -70,7 +70,7 @@
     name: "CardColor",
     data: () => ({
       variants: ['elevated', 'flat', 'tonal', 'outlined'],
-      color: 'indigo'
+      color: 'indigo',
     }),
   }
 </script>
