@@ -2,20 +2,20 @@
   <div class="d-flex flex-column gap-3">
     <h1>Login</h1>
     <router-view name="shoplogin"></router-view>
-    
+
     <div class="mb-3">
-      <label for="login" class="form-label">Username</label>
-      <input type="text" class="form-control" id="login" v-model="login">
+      <label class="form-label" for="login">Username</label>
+      <input id="login" v-model="login" class="form-control" type="text">
     </div>
 
     <div class="mb-3">
-      <label for="password" class="form-label">Password</label>
-      <input type="password" class="form-control" id="password" v-model="password">
+      <label class="form-label" for="password">Password</label>
+      <input id="password" v-model="password" class="form-control" type="password">
     </div>
 
-    <button @click="shopLogin({login, password})" class="btn btn-primary">Login</button>
+    <button class="btn btn-primary" @click="loginUser({login, password})">Login</button>
 
-    <table v-if="shopUser" class="table table-striped">
+    <table v-if="loggedUser" class="table table-striped">
       <thead>
       <tr>
         <th>id</th>
@@ -28,11 +28,11 @@
 
       <tbody>
       <tr>
-        <td>{{ shopUser._id }}</td>
-        <td>{{ shopUser.name }}</td>
-        <td>{{ shopUser.login }}</td>
-        <td>{{ shopUser.email }}</td>
-        <td>{{ shopUser.session }}</td>
+        <td>{{ loggedUser._id }}</td>
+        <td>{{ loggedUser.name }}</td>
+        <td>{{ loggedUser.login }}</td>
+        <td>{{ loggedUser.email }}</td>
+        <td>{{ loggedUser.session }}</td>
       </tr>
       </tbody>
     </table>
@@ -51,10 +51,10 @@ export default {
     password: '',
   }),
   computed: {
-    ...mapState('shop', ['shopUser'])
+    ...mapState('user', ['loggedUser']),
   },
   methods: {
-    ...mapActions('shop', ['shopLogin']),
+    ...mapActions('user', ['loginUser']),
   }
 }
 </script>

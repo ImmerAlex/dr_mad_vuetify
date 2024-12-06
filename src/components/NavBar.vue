@@ -24,18 +24,21 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
   name: "NavBar",
   data: () => ({
     drawer: false,
   }),
   computed: {
+    ...mapGetters('user', ['isLogged']),
     links() {
       const links = [];
 
-      if (this.loggedUser === undefined) {
+      if (!this.isLogged) {
 
-        links.push({ title: "Login", icon: "mdi-login", to: { 'name': 'login' } });
+        links.push({ title: "Login", icon: "mdi-login", to: { 'name': 'shoplogin' } });
         links.push({ title: "Register", icon: "mdi-account-plus", to: { 'name': 'register' } });
 
       } else {
