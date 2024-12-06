@@ -5,7 +5,7 @@
       <v-toolbar-title>Dr Mad</v-toolbar-title>
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" absolute height="fit-content" temporary>
+    <v-navigation-drawer v-model="drawer" absolute height="100dvh" temporary>
       <v-list dense nav>
         <v-list-item-group active-class="primary--text text--accent-4">
 
@@ -54,7 +54,14 @@ export default {
       } else {
 
         links.push({title: "Home", icon: "mdi-home", to: {'name': 'home'}});
-        links.push({title: "Profile", icon: "mdi-account", to: {'name': 'profile'}});
+
+        links.push({title: "Shop", icon: "mdi-account", to: {'name': 'shophome'}});
+        links.push({title: "Buy", icon: "mdi-account", to: {'name': 'shopbuy'}});
+        links.push({title: "Order", icon: "mdi-account", to: {'name': 'shoporders'}});
+
+        links.push({title: "Viruses", icon: "mdi-virus", to: {'name': 'shopitems'}});
+        links.push({title: "Bank", icon: "mdi-bank", to: {'name': 'bankaccount'}});
+
         links.push({title: "Logout", icon: "mdi-logout", action: 'logout'});
 
       }
