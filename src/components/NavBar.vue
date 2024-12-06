@@ -10,13 +10,14 @@
         <v-list-item-group active-class="primary--text text--accent-4">
 
           <template v-for="link in links">
-            <router-link v-if="link.to" :key="link.title" :to="link.to" class="d-flex align-center"
-                         tag="v-list-item">
+            <v-list-item v-if="link.to" :key="link.title" :to="link.to" class="d-flex align-center">
+              <router-link>
+            </router-link>
               <v-list-item-icon>
                 <v-icon>{{ link.icon }}</v-icon>
               </v-list-item-icon>
               <v-list-item-title>{{ link.title }}</v-list-item-title>
-            </router-link>
+            </v-list-item>
 
             <v-list-item v-else :key="link.title" class="d-flex align-center" @click="handleAction(link.action)">
               <v-list-item-icon>
