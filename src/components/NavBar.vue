@@ -9,13 +9,23 @@
       <v-list dense nav>
         <v-list-item-group active-class="primary--text text--accent-4">
 
-          <router-link v-for="link in links" :key="link.title" :to="link.to" class="d-flex align-center"
-                       tag="v-list-item">
-            <v-list-item-icon>
-              <v-icon>{{ link.icon }}</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>{{ link.title }}</v-list-item-title>
-          </router-link>
+          <template v-for="link in links">
+            <router-link v-if="link.to" :key="link.title" :to="link.to" class="d-flex align-center"
+                         tag="v-list-item">
+              <v-list-item-icon>
+                <v-icon>{{ link.icon }}</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>{{ link.title }}</v-list-item-title>
+            </router-link>
+
+            <v-list-item v-else :key="link.title" class="d-flex align-center" @click="handleAction(link.action)">
+              <v-list-item-icon>
+                <v-icon>{{ link.icon }}</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>{{ link.title }}</v-list-item-title>
+            </v-list-item>
+
+          </template>
 
         </v-list-item-group>
       </v-list>
@@ -24,7 +34,7 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
   name: "NavBar",
@@ -38,19 +48,26 @@ export default {
 
       if (!this.isLogged) {
 
-        links.push({ title: "Login", icon: "mdi-login", to: { 'name': 'shoplogin' } });
-        links.push({ title: "Register", icon: "mdi-account-plus", to: { 'name': 'register' } });
+        links.push({title: "Login", icon: "mdi-login", to: {'name': 'shoplogin'}});
+        links.push({title: "Register", icon: "mdi-account-plus", to: {'name': 'register'}});
 
       } else {
 
-        links.push({ title: "Home", icon: "mdi-home", to: { 'name': 'home' } });
-        links.push({ title: "Profile", icon: "mdi-account", to: { 'name': 'profile' } });
-        links.push({ title: "Logout", icon: "mdi-logout", to: { 'name': 'logout' } });
+        links.push({title: "Home", icon: "mdi-home", to: {'name': 'home'}});
+        links.push({title: "Profile", icon: "mdi-account", to: {'name': 'profile'}});
+        links.push({title: "Logout", icon: "mdi-logout", action: 'logout'});
 
       }
 
       return links;
     },
   },
+  methods: {
+    ...mapActions('user', ['logout']),
+    handleAction(action) {
+      console.log(action)
+      this[action]();
+    }
+  }
 };
 </script>
