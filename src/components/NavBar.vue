@@ -65,7 +65,6 @@ export default {
   methods: {
     ...mapActions('user', ['logout']),
     handleAction(action) {
-      console.log(action)
       this[action]();
     }
   }

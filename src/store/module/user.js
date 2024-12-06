@@ -29,6 +29,5 @@ export default {
     },
     getters: {
         isLogged: (state) => state.loggedUser !== null,
-        loggedUser: (state) => state.loggedUser,
     },
 };
