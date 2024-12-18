@@ -32,6 +32,9 @@
     "vue-template-compiler": "^2.6.14",
     "vuetify-loader": "^1.7.0"
   },
+  "browser": {
+    "crypto": false
+  },
   "eslintConfig": {
     "root": true,
     "env": {
