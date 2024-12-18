@@ -1,12 +1,13 @@
 import {bankaccounts, items, shopusers, transactions} from './data'
 import {v4 as uuidv4} from 'uuid'
+import bcrypt from 'bcryptjs'
 
 
 function loginUser(data) {
     if ((!data.login) || (!data.password)) return {error: 1, status: 404, data: 'aucun login/pass fourni'}
 
     // pour simplifier : test uniquement le login
-    let user = shopusers.find(e => e.login === data.login)
+    let user = shopusers.find(e => e.login === data.login && bcrypt.compareSync(data.password, e.password));
 
     if (!user) return { error: 1, status: 404, data: 'login/pass incorrect' }
 
