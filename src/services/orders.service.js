@@ -38,8 +38,7 @@ async function payOrder(orderId) {
     }
 
     // 2. Vérifier si l'orderId correspond à une commande de l'utilisateur
-    // TODO: changer pour utiliser uuid plutot que order id
-    const orderExists = userOrdersResponse.data.some(order => order._id === orderId)
+    const orderExists = userOrdersResponse.data.some(order => order.uuid === orderId)
     
     if (!orderExists) {
       return {

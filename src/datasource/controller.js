@@ -51,8 +51,10 @@ function getAccountTransactions(number) {
 }
 
 function getUserOrders(userId){
+  console.log("getUserOrders("+userId+")");
   // Trouver l'utilisateur dans la liste des shopusers
   const user = shopusers.find(user => user._id === userId);
+  console.log("shopusers found:" + user.name);
 
   if (!user) {
     return {
@@ -62,6 +64,7 @@ function getUserOrders(userId){
     }
   }
 
+console.log("user orders:", JSON.stringify(user.orders, null, 2));
   // Retourner les commandes de l'utilisateur
   return {
     error: 0,
