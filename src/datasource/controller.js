@@ -2,7 +2,6 @@ import {bankaccounts, items, shopusers, transactions} from './data'
 import {v4 as uuidv4} from 'uuid'
 import bcrypt from 'bcryptjs'
 
-
 function loginUser(data) {
     if ((!data.login) || (!data.password)) return {error: 1, status: 404, data: 'aucun login/pass fourni'}
 

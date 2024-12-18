@@ -6,6 +6,7 @@ import VirusesView from '@/views/VirusesView.vue'
 import BankAccountView from '@/views/BankAccountView.vue'
 import ShopView from '@/views/ShopView.vue'
 import ShopLoginView from '@/views/ShopLoginView.vue'
+import ShopPay from '@/views/ShopPay.vue'
 
 Vue.use(VueRouter)
 
@@ -43,10 +44,10 @@ const routes = [
         }
       },
       {
-        path: 'pay/:orderId',
+        path: 'pay/:orderId?',
         name: 'shoppay',
         components: {
-          center: HomeView,
+          center: ShopPay,
         }
       },
       {

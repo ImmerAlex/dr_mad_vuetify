@@ -64,6 +64,7 @@ export default {
         links.push({title: "Home", icon: "mdi-home", to: {name: 'home'}});
         links.push({title: "Shop", icon: "mdi-account", to: {name: 'shophome'}});
         links.push({title: "Buy", icon: "mdi-account", to: {name: 'shopbuy'}});
+        links.push({title: "Pay", icon: "mdi-account", to: {name: 'shoppay'}});
         links.push({title: "Order", icon: "mdi-account", to: {name: 'shoporders'}});
         links.push({title: "Viruses", icon: "mdi-virus", to: {name: 'shopitems'}});
         links.push({title: "Logout", icon: "mdi-logout", action: 'logout'});
