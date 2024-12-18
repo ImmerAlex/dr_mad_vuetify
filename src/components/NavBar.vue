@@ -78,11 +78,5 @@ export default {
       this[action]();
     }
   },
-  watch: {
-    '$route'() {
-      // Réinitialiser la sélection lors du changement de route
-      this.selectedItem = null;
-    }
-  }
 };
 </script>
