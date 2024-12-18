@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-card class="mx-auto" max-width="900">
+    <v-card class="mx-auto" >
       <v-card-title class="text-h5 d-flex align-center">
         <span>Mes commandes</span>
         <v-spacer></v-spacer>
@@ -35,7 +35,7 @@
           </div>
         </div>
 
-        <v-table v-else>
+        <table class="table" v-else>
           <thead>
             <tr>
               <th>Référence</th>
@@ -78,7 +78,7 @@
               </td>
             </tr>
           </tbody>
-        </v-table>
+        </table>
       </v-card-text>
     </v-card>
   </v-container>
@@ -108,6 +108,7 @@ export default {
       this.error = null
 
       try {
+            await new Promise(resolve => setTimeout(resolve, 1000))
         // TODO: Récupérer l'ID de l'utilisateur connecté depuis le store
         const userId = "66d58122c08b4d64db14cd04" 
         const response = await OrderService.getUserOrders(userId)
