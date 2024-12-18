@@ -74,6 +74,7 @@
 <script>
 import { mapActions } from 'vuex';
 
+// TODO: add filters
 export default {
     name: "ItemsList",
     data: () => ({
