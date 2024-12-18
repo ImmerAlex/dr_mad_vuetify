@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { payOrder } from '@/services/orders.service'
+import OrderService from '@/services/orders.service'
 
 export default {
   name: 'ShopPay',
@@ -86,7 +86,7 @@ export default {
       this.error = null
 
       try {
-        const response = await payOrder(this.orderIdInput)
+        const response = await OrderService.payOrder(this.orderIdInput)
         if (response.error === 0) {
           this.snackbarColor = 'success'
           this.snackbarText = 'Paiement effectué avec succès'

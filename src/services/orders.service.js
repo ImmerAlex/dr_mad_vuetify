@@ -9,7 +9,7 @@ async function payOrderFromLocalSource() {
   return { error: 0}
 }
 
-export async function getUserOrders(userId) {
+async function getUserOrders(userId) {
   let response;
   try {
     response = await getUserOrdersFromLocalSource(userId)
@@ -23,7 +23,7 @@ export async function getUserOrders(userId) {
   return response
 }
 
-export async function payOrder(orderId) {
+async function payOrder(orderId) {
   try {
     // 1. D'abord récupérer les commandes de l'utilisateur
     //TODO: récupérer correctement l'user loggé
@@ -38,6 +38,7 @@ export async function payOrder(orderId) {
     }
 
     // 2. Vérifier si l'orderId correspond à une commande de l'utilisateur
+    // TODO: changer pour utiliser uuid plutot que order id
     const orderExists = userOrdersResponse.data.some(order => order._id === orderId)
     
     if (!orderExists) {
@@ -62,3 +63,7 @@ export async function payOrder(orderId) {
   }
 }
 
+export default{
+  payOrder,
+  getUserOrders,
+}
