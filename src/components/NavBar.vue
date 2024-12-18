@@ -25,7 +25,7 @@
 
             <v-list-item 
               v-else 
-              :key="link.title" 
+              :key="index" 
               :value="index"
               class="d-flex align-center" 
               @click="handleAction(link.action)"

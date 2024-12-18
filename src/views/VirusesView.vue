@@ -102,7 +102,7 @@ export default {
     },
     toggleSelection(index) {
       const selectedIndex = this.selected.indexOf(index);
-      if (selectedIndex === -1) {
+      if (selectedIndex === -1) { // si l'index n'est pas dans le tableau
         this.selected.push(index);
       } else {
         this.selected.splice(selectedIndex, 1);

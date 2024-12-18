@@ -7,6 +7,7 @@ import BankAccountView from '@/views/BankAccountView.vue'
 import ShopView from '@/views/ShopView.vue'
 import ShopLoginView from '@/views/ShopLoginView.vue'
 import ShopPay from '@/views/ShopPay.vue'
+import ShopBuy from '@/views/ShopBuy.vue';
 
 Vue.use(VueRouter)
 
@@ -40,7 +41,7 @@ const routes = [
         path: 'buy',
         name: 'shopbuy',
         components: {
-          center: HomeView,
+          center: ShopBuy,
         }
       },
       {
