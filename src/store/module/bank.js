@@ -4,7 +4,7 @@ export default {
   namespaced: true,
   // state = les données centralisées
   state:()=>({
-    accountAmount: 0,
+    accountAmount: undefined,
     accountTransactions: [],
     accountNumberError: 0,
   }),
@@ -18,6 +18,15 @@ export default {
     },
     updateAccountNumberError(state, error) {
       state.accountNumberError = error
+    },
+    setToDefaultTransaction(state) {
+      state.accountTransactions = []
+    },
+    setToDefaultAmount(state) {
+      state.accountAmount = undefined
+    },
+    setToDefaultNumberError(state) {
+      state.accountNumberError = 0
     }
   },
   // actions = fonctions asynchrone pour mettre à jour le state, en faisant appel aux mutations, via la fonction commit()
