@@ -70,10 +70,21 @@
                   color="primary"
                   size="small"
                   variant="text"
+                  style="margin-right: 5px"
                   :to="{ name: 'shoppay', params: { orderId: order.uuid }}"
                 >
                   <v-icon left size="small">mdi-cash-register</v-icon>
                   Payer
+                </v-btn>
+                <v-btn
+                  v-if="order.status === 'pending'"
+                  color="secondary"
+                  size="small"
+                  variant="text"
+                  :to="{ name: 'shoppay', params: { orderId: order.uuid }}"
+                >
+                  <v-icon left size="small">mdi-cash-register</v-icon>
+                  Annuler
                 </v-btn>
               </td>
             </tr>
@@ -108,7 +119,8 @@ export default {
       this.error = null
 
       try {
-            await new Promise(resolve => setTimeout(resolve, 1000))
+        // pour visualiser la jolie animation de chargement :)
+        await new Promise(resolve => setTimeout(resolve, 500))
         // TODO: Récupérer l'ID de l'utilisateur connecté depuis le store
         const userId = "66d58122c08b4d64db14cd04" 
         const response = await OrderService.getUserOrders(userId)
