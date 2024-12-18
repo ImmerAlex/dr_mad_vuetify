@@ -8,6 +8,7 @@ import ShopView from '@/views/ShopView.vue'
 import ShopLoginView from '@/views/ShopLoginView.vue'
 import ShopPay from '@/views/ShopPay.vue'
 import ShopBuy from '@/views/ShopBuy.vue';
+import ShopOrder from '@/views/ShopOrder.vue';
 
 Vue.use(VueRouter)
 
@@ -55,7 +56,7 @@ const routes = [
         path: 'orders',
         name: 'shoporders',
         components: {
-          center: HomeView,
+          center: ShopOrder,
         }
       },
     ]
