@@ -57,15 +57,15 @@ export default {
       const links = [];
 
       if (!this.isLogged) {
+        links.push({title: "Bank", icon: "mdi-bank", to: {name: 'bankaccount'}});
         links.push({title: "Login", icon: "mdi-login", to: {name: 'shoplogin'}});
-        links.push({title: "Register", icon: "mdi-account-plus", to: {name: 'register'}});
       } else {
+        links.push({title: "Bank", icon: "mdi-bank", to: {name: 'bankaccount'}});
         links.push({title: "Home", icon: "mdi-home", to: {name: 'home'}});
         links.push({title: "Shop", icon: "mdi-account", to: {name: 'shophome'}});
         links.push({title: "Buy", icon: "mdi-account", to: {name: 'shopbuy'}});
         links.push({title: "Order", icon: "mdi-account", to: {name: 'shoporders'}});
         links.push({title: "Viruses", icon: "mdi-virus", to: {name: 'shopitems'}});
-        links.push({title: "Bank", icon: "mdi-bank", to: {name: 'bankaccount'}});
         links.push({title: "Logout", icon: "mdi-logout", action: 'logout'});
       }
 
