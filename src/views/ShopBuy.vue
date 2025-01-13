@@ -1,9 +1,9 @@
 <template>
-  <div class="d-flex flex-column-reverse flex-md-row align-items-start justify-content-between">
+  <div class="containerBuy">
 
-    <ItemsList :items="viruses" style="width: 55%;"/>
+    <ItemsList class="itemList" :items="viruses"/>
 
-    <BasketList :cart="cart" style="width: 40%; min-height: 200px;"/>
+    <BasketList class="basketList" :cart="cart"/>
 
   </div>
 </template>
@@ -27,3 +27,31 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+/*
+ class="d-flex flex-column-reverse flex-md-row align-items-start justify-content-between"
+*/
+.containerBuy {
+    display: flex;
+    align-items: flex-start;
+    gap: 30px;
+}
+
+.itemList {
+    width: 100%;
+}
+
+.basketList {
+    width: 100%;
+    min-height: 200px;
+}
+
+@media (max-width: 768px) {
+    .containerBuy {
+        flex-direction: column-reverse;
+        margin: 0 30px;
+    }
+}
+
+</style>
