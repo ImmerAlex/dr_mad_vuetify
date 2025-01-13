@@ -4,23 +4,41 @@ async function getUserOrdersFromLocalSource(userId) {
   return LocalSource.getUserOrders(userId)
 }
 
-// TODO: implémenter cette fonction
-async function payOrderFromLocalSource() {
-  return { error: 0}
-}
-
 async function getUserOrders(userId) {
   let response;
   try {
     response = await getUserOrdersFromLocalSource(userId)
-  } catch(err) {
+  } catch (err) {
     response = {
-      error: 1, 
-      status: 404, 
+      error: 1,
+      status: 404,
       data: 'erreur réseau, impossible de récupérer les commandes'
     }
   }
   return response
+}
+
+async function getUserOrderById(userId, orderId){
+  const userOrders = getUserOrders(userId);
+  console.log("getUserOrderById(" + orderId + ")");
+  const order = userOrders.find(order => order.uuid === orderId);
+  console.log("order found:" + order.uuid);
+
+  if (!order) {
+    return {
+      error: 1,
+      status: 404,
+      data: 'Commande non trouvé'
+    }
+  }
+
+  console.log("user order:", JSON.stringify(order));
+  // Retourner la commande de l'utilisateur
+  return {
+    error: 0,
+    status: 200,
+    data: order || [] // Si user.orders n'existe pas, retourner un tableau vide
+  }
 }
 
 async function payOrder(orderId) {
@@ -28,7 +46,7 @@ async function payOrder(orderId) {
     // 1. D'abord récupérer les commandes de l'utilisateur
     //TODO: récupérer correctement l'user loggé
     const userOrdersResponse = await getUserOrdersFromLocalSource("66d58122c08b4d64db14cd04")
-    
+
     if (userOrdersResponse.error) {
       return {
         error: 1,
@@ -39,7 +57,7 @@ async function payOrder(orderId) {
 
     // 2. Vérifier si l'orderId correspond à une commande de l'utilisateur
     const orderExists = userOrdersResponse.data.some(order => order.uuid === orderId)
-    
+
     if (!orderExists) {
       return {
         error: 1,
@@ -49,11 +67,10 @@ async function payOrder(orderId) {
     }
 
     // 3. Si la commande existe, on la finalise
-    const response = await payOrderFromLocalSource()
-    
-    return response
 
-  } catch(err) {
+    return orderExists;
+
+  } catch (err) {
     return {
       error: 1,
       status: 500,
@@ -62,7 +79,8 @@ async function payOrder(orderId) {
   }
 }
 
-export default{
+export default {
   payOrder,
   getUserOrders,
+  getUserOrderById,
 }

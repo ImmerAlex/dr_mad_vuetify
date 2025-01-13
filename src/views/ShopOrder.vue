@@ -81,7 +81,6 @@
                   color="secondary"
                   size="small"
                   variant="text"
-                  :to="{ name: 'shoppay', params: { orderId: order.uuid }}"
                 >
                   <v-icon left size="small">mdi-cash-register</v-icon>
                   Annuler

@@ -49,11 +49,14 @@
         </template>
       </v-snackbar>
     </v-card>
+    loggedUser Id : {{loggedUser._id}}
+    {{userOrders}}
   </v-container>
 </template>
 
 <script>
   import OrderService from '@/services/orders.service'
+  import { mapGetters } from 'vuex'
 
   export default {
     name: 'ShopPay',
@@ -77,6 +80,11 @@
       if (this.orderId) {
         this.orderIdInput = this.orderId
       }
+    },
+    computed: {
+      ...mapGetters('user', ['isLogged']),
+      ...mapGetters('user', ['loggedUser']),
+      ...mapGetters('user', ['userOrders']),
     },
     methods: {
       async handlePayment() {

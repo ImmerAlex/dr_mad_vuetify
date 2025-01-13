@@ -52,9 +52,11 @@ export default {
   }),
   computed: {
     ...mapState('user', ['loggedUser']),
+    ...mapState('user', ['userOrders']),
   },
   methods: {
     ...mapActions('user', ['loginUser']),
+    ...mapActions('user', ['fetchOrders']),
   }
 }
 </script>
