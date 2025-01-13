@@ -1,123 +1,139 @@
 <template>
-  <div class="d-flex flex-column gap-3">
-    <h1>Account data</h1>
-
-    <div class="d-flex flex-column gap-2">
-      <div>
-        <label for="accountNumber" class="form-label">Account number</label>
-        <div class="d-flex align-items-center">
-          <input id="accountNumber" v-model="number" class="form-control" />
-          <button class="btn btn-danger" @click="resetAccountNumber">
-            Deconnection
-          </button>
-        </div>
-        <p v-if="accountNumberError === -1">invalid account number</p>
-      </div>
-
-      <div class="d-flex align-items-center gap-2">
-        <button
-          :disabled="!isAccountNumberValid"
-          @click="getAccountAmount(number)"
-          class="btn btn-success"
-        >
-          Get amount
-        </button>
-        <button
-          :disabled="!isAccountNumberValid"
-          @click="getAccountTransactions(number)"
-          class="btn btn-primary"
-        >
-          Get transactions
-        </button>
-      </div>
+    <div v-if="loggedBankAccount !== undefined">
+        <MainBank :bank-account="loggedBankAccount" />
     </div>
 
-    <div>
-      <p>
-        Available amount :
-        <span
-          v-if="accountNumberError === 1 && accountAmount !== undefined"
-          class="fw-bold"
-          >{{ formatNumber(accountAmount) }}</span
-        >
-        <span v-else></span>
-      </p>
+    <div v-else>
+        <BankLogin />
     </div>
 
-    <div>
-      <h2>Transaction(s)</h2>
-      <table
-        v-if="accountNumberError === 1 && accountTransactions.length > 0"
-        class="table table-striped"
-      >
-        <thead>
-          <tr>
-            <th>id</th>
-            <th>amount</th>
-            <th>date</th>
-            <th>heure</th>
-          </tr>
-        </thead>
+<!--  <div class="d-flex flex-column gap-3">-->
+<!--    <h1>Account data</h1>-->
 
-        <tbody>
-          <tr v-for="(transaction, index) in accountTransactions" :key="index">
-            <td>{{ transaction._id }}</td>
-            <td>{{ transaction.amount }}</td>
-            <td>{{ convertDateToDate(transaction.date) }}</td>
-            <td>{{ convertDateToTime(transaction.date) }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <span v-else></span>
-    </div>
-  </div>
+<!--    <div class="d-flex flex-column gap-2">-->
+<!--      <div>-->
+<!--        <label for="accountNumber" class="form-label">Account number</label>-->
+<!--        <div class="d-flex align-items-center">-->
+<!--          <input id="accountNumber" v-model="number" class="form-control" />-->
+<!--          <button class="btn btn-danger" @click="resetAccountNumber">-->
+<!--            Deconnection-->
+<!--          </button>-->
+<!--        </div>-->
+<!--        <p v-if="accountError === -1">invalid account number</p>-->
+<!--      </div>-->
+
+<!--      <div class="d-flex align-items-center gap-2">-->
+<!--        <button-->
+<!--          :disabled="!isAccountNumberValid"-->
+<!--          @click="getAccountAmount(number)"-->
+<!--          class="btn btn-success"-->
+<!--        >-->
+<!--          Get amount-->
+<!--        </button>-->
+<!--        <button-->
+<!--          :disabled="!isAccountNumberValid"-->
+<!--          @click="getAccountTransactions(number)"-->
+<!--          class="btn btn-primary"-->
+<!--        >-->
+<!--          Get transactions-->
+<!--        </button>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <div>-->
+<!--      <p>-->
+<!--        Available amount :-->
+<!--        <span-->
+<!--          v-if="accountError === 1 && accountAmount !== undefined"-->
+<!--          class="fw-bold"-->
+<!--          >{{ formatNumber(accountAmount) }}</span-->
+<!--        >-->
+<!--        <span v-else></span>-->
+<!--      </p>-->
+<!--    </div>-->
+
+<!--    <div>-->
+<!--      <h2>Transaction(s)</h2>-->
+<!--      <table-->
+<!--        v-if="accountError === 1 && accountTransactions.length > 0"-->
+<!--        class="table table-striped"-->
+<!--      >-->
+<!--        <thead>-->
+<!--          <tr>-->
+<!--            <th>id</th>-->
+<!--            <th>amount</th>-->
+<!--            <th>date</th>-->
+<!--            <th>heure</th>-->
+<!--          </tr>-->
+<!--        </thead>-->
+
+<!--        <tbody>-->
+<!--          <tr v-for="(transaction, index) in accountTransactions" :key="index">-->
+<!--            <td>{{ transaction._id }}</td>-->
+<!--            <td>{{ transaction.amount }}</td>-->
+<!--            <td>{{ convertDateToDate(transaction.date) }}</td>-->
+<!--            <td>{{ convertDateToTime(transaction.date) }}</td>-->
+<!--          </tr>-->
+<!--        </tbody>-->
+<!--      </table>-->
+<!--      <span v-else></span>-->
+<!--    </div>-->
+<!--  </div>-->
 </template>
 
 <script>
-import { mapActions, mapMutations, mapState } from "vuex";
+// import { mapActions, mapMutations, mapState } from "vuex";
+
+import {mapState} from "vuex";
+import BankLogin from "@/components/BankLogin.vue";
+import MainBank from "@/components/MainBank.vue";
 
 export default {
   name: "BankAccountView",
+    components: {MainBank, BankLogin},
   data: () => ({
     number: "",
   }),
-  computed: {
-    ...mapState("bank", [
-      "accountAmount",
-      "accountTransactions",
-      "accountNumberError",
-    ]),
-    isAccountNumberValid() {
-      const rexp = RegExp("^[A-Za-z0-9]{22}-[0-9]{7}$", "g");
-      return rexp.test(this.number);
-    },
-  },
-  methods: {
-    ...mapActions("bank", ["getAccountAmount", "getAccountTransactions"]),
-    ...mapMutations("bank", [
-      "updateAccountNumberError",
-      "setToDefaultTransaction",
-      "setToDefaultAmount",
-      "setToDefaultNumberError",
-    ]),
-    convertDateToDate(date) {
-      let d = new Date(date);
-      return d.getMonth() + "/" + d.getDate() + "/" + d.getFullYear();
-    },
-    convertDateToTime(date) {
-      let d = new Date(date);
-      return d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
-    },
-    resetAccountNumber() {
-      this.number = "";
-      this.updateAccountNumberError(0);
-      this.setToDefaultTransaction();
-      this.setToDefaultAmount();
-      this.setToDefaultNumberError();
-    },
-    formatNumber(number) {
-      return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-    },
-  },
+    computed: {
+      ...mapState('bank', ['loggedBankAccount'])
+    }
+  // computed: {
+  //   ...mapState("bank", [
+  //     "accountAmount",
+  //     "accountTransactions",
+  //     "accountError",
+  //   ]),
+  //   isAccountNumberValid() {
+  //     const rexp = RegExp("^[A-Za-z0-9]{22}-[0-9]{7}$", "g");
+  //     return rexp.test(this.number);
+  //   },
+  // },
+  // methods: {
+  //   ...mapActions("bank", ["getAccountAmount", "getAccountTransactions"]),
+  //   ...mapMutations("bank", [
+  //     "updateAccountError",
+  //     "setToDefaultTransaction",
+  //     "setToDefaultAmount",
+  //     "setToDefaultNumberError",
+  //   ]),
+  //   convertDateToDate(date) {
+  //     let d = new Date(date);
+  //     return d.getMonth() + "/" + d.getDate() + "/" + d.getFullYear();
+  //   },
+  //   convertDateToTime(date) {
+  //     let d = new Date(date);
+  //     return d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+  //   },
+  //   resetAccountNumber() {
+  //     this.number = "";
+  //     this.updateAccountError(0);
+  //     this.setToDefaultTransaction();
+  //     this.setToDefaultAmount();
+  //     this.setToDefaultNumberError();
+  //   },
+  //   formatNumber(number) {
+  //     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  //   },
+  // },
 };
 </script>

@@ -74,7 +74,6 @@
 <script>
 import {mapActions} from 'vuex';
 
-// TODO: add filters
 export default {
     name: "ItemsList",
     data: () => ({
@@ -144,9 +143,11 @@ export default {
                 if (this.prizeFilterActive && item.price < this.prizeFilter) {
                     return false;
                 }
+
                 if (this.nameFilterActive && !item.name.includes(this.nameFilter)) {
                     return false;
                 }
+
                 if (this.stockFilterActive && item.stock === 0) {
                     return false;
                 }
