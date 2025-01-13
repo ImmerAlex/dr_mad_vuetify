@@ -3,7 +3,7 @@
 
     <ItemsList :items="viruses" style="width: 55%;"/>
 
-    <BasketList :cart="cart" style="width: 40%; border: 1px solid black; padding: 10px; min-height: 200px"/>
+    <BasketList :cart="cart" style="width: 40%; min-height: 200px;"/>
 
   </div>
 </template>
