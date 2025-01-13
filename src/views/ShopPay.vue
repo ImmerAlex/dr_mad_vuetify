@@ -77,8 +77,8 @@
       }
     },
     created() {
-      if (this.orderId) {
-        this.orderIdInput = this.orderId
+      if (this.$route.params.orderId) {
+        this.orderIdInput = this.$route.params.orderId
       }
     },
     computed: {
