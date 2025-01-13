@@ -5,30 +5,30 @@
 
             <div class="d-flex flex-column">
                 <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="filterpriceactive" v-model="prizeFilterActive">
-                    <label for="filterpriceactive" class="form-check-label">Prix min</label>
+                    <input id="filterpriceactive" v-model="prizeFilterActive" class="form-check-input" type="checkbox">
+                    <label class="form-check-label" for="filterpriceactive">Prix min</label>
                 </div>
 
                 <div v-if="prizeFilterActive">
-                    <input type="number" id="filterprice" class="form-control" v-model="prizeFilter">
+                    <input id="filterprice" v-model="prizeFilter" class="form-control" type="number">
                 </div>
             </div>
 
             <div class="d-flex flex-column">
                 <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="filternameactive" v-model="nameFilterActive">
-                    <label for="filternameactive" class="form-check-label">Nom contient</label>
+                    <input id="filternameactive" v-model="nameFilterActive" class="form-check-input" type="checkbox">
+                    <label class="form-check-label" for="filternameactive">Nom contient</label>
                 </div>
 
                 <div v-if="nameFilterActive">
-                    <input id="filtername" class="form-control" v-model="nameFilter">
+                    <input id="filtername" v-model="nameFilter" class="form-control">
                 </div>
             </div>
 
             <div class="d-flex flex-column">
                 <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="filterstockactive" v-model="stockFilterActive">
-                    <label for="filterstockactive" class="form-check-label">En stock</label>
+                    <input id="filterstockactive" v-model="stockFilterActive" class="form-check-input" type="checkbox">
+                    <label class="form-check-label" for="filterstockactive">En stock</label>
                 </div>
             </div>
         </div>
@@ -39,40 +39,40 @@
 
         <table class="table table-striped">
             <thead>
-                <tr>
-                    <th>
-                        <input type="checkbox" @click="toggleAll">
-                    </th>
-                    <th>name</th>
-                    <th>stock</th>
-                    <th>price</th>
-                    <th>number</th>
-                    <th>button</th>
-                </tr>
+            <tr>
+                <th>
+                    <input type="checkbox" @click="toggleAll">
+                </th>
+                <th>name</th>
+                <th>stock</th>
+                <th>price</th>
+                <th>number</th>
+                <th>button</th>
+            </tr>
             </thead>
 
             <tbody>
-                <tr v-for="(item, index) in items" :key="index" class="item-row">
-                    <td>
-                        <input type="checkbox" class="item-checkbox">
-                    </td>
-                    <td>{{item.name}}</td>
-                    <td>{{item.stock}}</td>
-                    <td>{{item.price}}</td>
-                    <td>
-                        <input type="number" class="form-control" :max="item.stock" min="0" value="0">
-                    </td>
-                    <td>
-                        <button class="btn btn-primary" @click="addSelected(index)">Ajouter</button>
-                    </td>
-                </tr>
+            <tr v-for="(item, index) in filterItems()" :key="index" class="item-row">
+                <td>
+                    <input class="item-checkbox" type="checkbox">
+                </td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.stock }}</td>
+                <td>{{ item.price }}</td>
+                <td>
+                    <input :max="item.stock" class="form-control" min="0" type="number" value="0">
+                </td>
+                <td>
+                    <button class="btn btn-primary" @click="addSelected(index)">Ajouter</button>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import {mapActions} from 'vuex';
 
 // TODO: add filters
 export default {
@@ -113,7 +113,7 @@ export default {
             const row = document.querySelectorAll('.item-row')[index];
             const wanted_nb = parseInt(row.querySelector('input[type="number"]').value);
             const stock = parseInt(row.querySelector('td:nth-child(3)').textContent);
-            
+
             if (wanted_nb === 0) {
                 this.error = "Vous devez commander au moins un virus";
                 return;
@@ -138,7 +138,22 @@ export default {
                     return;
                 }
             }
+        },
+        filterItems() {
+            return this.items.filter(item => {
+                if (this.prizeFilterActive && item.price < this.prizeFilter) {
+                    return false;
+                }
+                if (this.nameFilterActive && !item.name.includes(this.nameFilter)) {
+                    return false;
+                }
+                if (this.stockFilterActive && item.stock === 0) {
+                    return false;
+                }
+                return true;
+            });
         }
     },
 }
 </script>
+

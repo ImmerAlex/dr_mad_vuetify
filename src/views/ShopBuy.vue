@@ -9,13 +9,13 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import {mapActions, mapState} from "vuex";
 import ItemsList from "@/components/ItemsList.vue";
 import BasketList from "@/components/BasketList.vue";
 
 export default {
   name: "ShopBuy",
-  components: { ItemsList, BasketList },
+  components: {ItemsList, BasketList},
   computed: {
     ...mapState("shop", ["viruses", "cart"]),
   },
