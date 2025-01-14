@@ -27,7 +27,6 @@ export default {
     itemButton: Object, // l'objet pour les boutons d'items
     listButton: Object, // l'objet pour le bouton de liste
   },
-  data : () => {  }
 }
 </script>
 
