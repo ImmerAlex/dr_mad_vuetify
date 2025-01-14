@@ -91,7 +91,7 @@
       }
     },
     computed: {
-      ...mapGetters('user', ['isLogged']),
+      ...mapGetters('user', ['isLoggedUser']),
       ...mapGetters('user', ['loggedUser']),
       ...mapGetters('user', ['userOrders']),
       filteredOrder() {

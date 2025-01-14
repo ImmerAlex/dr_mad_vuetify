@@ -1,4 +1,5 @@
 import BankAccountService from '@/services/bankaccount.service'
+import router from '@/router/index'
 
 export default {
     namespaced: true,
@@ -60,13 +61,14 @@ export default {
             }
         },
         async loginToBankAccount({commit}, number) {
-            console.log('get bank account from account number');
             let response = await BankAccountService.loginToBankAccount(number);
 
             if (response.error === 0) {
                 commit('updateLoggedBankAccount', response.data);
                 commit('updateAccountError', undefined)
                 commit('updateHistoriqueLoggedBankAccount', response.data.number);
+
+                await router.push({name: 'bankSolde'})
             } else {
                 console.log(response.data);
                 commit('updateAccountError', response.data)
@@ -80,5 +82,8 @@ export default {
         historiqueLoggedBankAccount: state => {
             return state.historiqueLoggedBankAccount
         },
+        isLoggedBankAccount: state => {
+            return state.loggedBankAccount !== undefined
+        }
     }
 }

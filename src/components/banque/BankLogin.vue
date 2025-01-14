@@ -1,7 +1,7 @@
 <template>
-    <div class="d-flex flex-column-reverse flex-lg-row gap-4 container">
+    <div class="d-flex flex-column-reverse flex-lg-row gap-4">
         <div class="containerLogin">
-            <h1>Bank Login</h1>
+            <h1></h1>
 
             <p v-if="accountError" class="alert alert-danger">{{ accountError }}</p>
 
@@ -15,13 +15,14 @@
                 </datalist>
             </div>
 
-            <button :disabled="!validAccountNumber" class="btn btn-primary" @click="loginToBankAccount(number)">
+            <v-btn color="success" :disabled="!validAccountNumber" @click="loginToBankAccount(number)">
                 Login
-            </button>
+            </v-btn>
         </div>
+
         <div class="containerHistorique">
             <h1>Historique de connexion</h1>
-            <p class="ml-4 numberAccountHist" v-for="(number, index) in historiqueLoggedBankAccount" :key="index"
+            <p v-for="(number, index) in historiqueLoggedBankAccount" :key="index" class="ml-4 numberAccountHist"
                @click="setAccountNumber(number); isAccountNumberValid()">
                 {{ number }}
             </p>

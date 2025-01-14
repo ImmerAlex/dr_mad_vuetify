@@ -75,9 +75,7 @@ function getUserOrders(userId) {
 
 function loginToBankAccount(number) {
     if (!number) return {error: 1, status: 404, data: 'aucun numéro de compte bancaire fourni'}
-    console.log(bankaccounts)
     let account = bankaccounts.find(a => a.number === number)
-    console.log(bankaccounts)
     if (!account) return {error: 1, status: 404, data: 'numéro de compte bancaire incorrect'}
     return {error: 0, status: 200, data: account}
 }

@@ -1,83 +1,89 @@
 <template>
-  <v-card>
-    <v-app-bar color="primary" dark>
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>Dr Mad</v-toolbar-title>
-    </v-app-bar>
+    <v-card>
+        <v-app-bar color="primary" dark>
+            <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+            <v-toolbar-title>Dr Mad</v-toolbar-title>
+        </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" absolute height="100dvh" temporary>
-      <v-list dense nav>
-        <v-list-item-group v-model="selectedItem" active-class="primary--text text--accent-4">
-          <template v-for="(link, index) in links">
-            <v-list-item 
-              v-if="link.to" 
-              :key="link.title" 
-              :to="link.to" 
-              :value="index"
-              class="d-flex align-center"
-              exact
-            >
-              <v-list-item-icon>
-                <v-icon>{{ link.icon }}</v-icon>
-              </v-list-item-icon>
-              <v-list-item-title>{{ link.title }}</v-list-item-title>
-            </v-list-item>
+        <v-navigation-drawer v-model="drawer" absolute height="100dvh" temporary>
+            <v-list dense nav>
+                <v-list-item-group v-model="selectedItem" active-class="primary--text text--accent-4">
+                    <template v-for="(link, index) in links">
+                        <v-list-item
+                            v-if="link.to"
+                            :key="link.title"
+                            :to="link.to"
+                            :value="index"
+                            class="d-flex align-center"
+                            exact
+                        >
+                            <v-list-item-icon>
+                                <v-icon>{{ link.icon }}</v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-title>{{ link.title }}</v-list-item-title>
+                        </v-list-item>
 
-            <v-list-item 
-              v-else 
-              :key="index" 
-              :value="index"
-              class="d-flex align-center" 
-              @click="handleAction(link.action)"
-            >
-              <v-list-item-icon>
-                <v-icon>{{ link.icon }}</v-icon>
-              </v-list-item-icon>
-              <v-list-item-title>{{ link.title }}</v-list-item-title>
-            </v-list-item>
-          </template>
-        </v-list-item-group>
-      </v-list>
-    </v-navigation-drawer>
-  </v-card>
+                        <v-list-item
+                            v-else
+                            :key="index"
+                            :value="index"
+                            class="d-flex align-center"
+                            @click="handleAction(link.action)"
+                        >
+                            <v-list-item-icon>
+                                <v-icon>{{ link.icon }}</v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-title>{{ link.title }}</v-list-item-title>
+                        </v-list-item>
+                    </template>
+                </v-list-item-group>
+            </v-list>
+        </v-navigation-drawer>
+    </v-card>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
-  name: "NavBar",
-  data: () => ({
-    drawer: false,
-    selectedItem: null,
-  }),
-  computed: {
-    ...mapGetters('user', ['isLogged']),
-    links() {
-      const links = [];
+    name: "NavBar",
+    data: () => ({
+        drawer: false,
+        selectedItem: null,
+    }),
+    computed: {
+        ...mapGetters('user', ['isLoggedUser']),
+        ...mapGetters('bank', ['isLoggedBankAccount']),
+        links() {
+            const links = [];
 
-      if (!this.isLogged) {
-        links.push({title: "Bank", icon: "mdi-bank", to: {name: 'bankaccount'}});
-        links.push({title: "Login", icon: "mdi-login", to: {name: 'shoplogin'}});
-      } else {
-        links.push({title: "Bank", icon: "mdi-bank", to: {name: 'bankaccount'}});
-        links.push({title: "Home", icon: "mdi-home", to: {name: 'home'}});
-        links.push({title: "Shop", icon: "mdi-account", to: {name: 'shophome'}});
-        links.push({title: "Buy", icon: "mdi-account", to: {name: 'shopbuy'}});
-        links.push({title: "Pay", icon: "mdi-account", to: {name: 'shoppay'}});
-        links.push({title: "Order", icon: "mdi-account", to: {name: 'shoporders'}});
-        links.push({title: "Viruses", icon: "mdi-virus", to: {name: 'shopitems'}});
-        links.push({title: "Logout", icon: "mdi-logout", action: 'logout'});
-      }
+            if (!this.isLogged) {
+                if (!this.isLoggedBankAccount) {
+                    links.push({title: "Bank", icon: "mdi-bank", to: {name: 'bankLogin'}});
+                } else {
+                    links.push({title: "Bank", icon: "mdi-bank", to: {name: 'bankSolde'}});
+                }
 
-      return links;
+                links.push({title: "Login", icon: "mdi-login", to: {name: 'shoplogin'}});
+            } else {
+                links.push({title: "Bank", icon: "mdi-bank", to: {name: 'bankHome'}});
+                links.push({title: "Home", icon: "mdi-home", to: {name: 'home'}});
+                links.push({title: "Shop", icon: "mdi-account", to: {name: 'shophome'}});
+                links.push({title: "Buy", icon: "mdi-account", to: {name: 'shopbuy'}});
+                links.push({title: "Pay", icon: "mdi-account", to: {name: 'shoppay'}});
+                links.push({title: "Order", icon: "mdi-account", to: {name: 'shoporders'}});
+                links.push({title: "Viruses", icon: "mdi-virus", to: {name: 'shopitems'}});
+                links.push({title: "Logout", icon: "mdi-logout", action: 'logout'});
+            }
+
+            return links;
+        },
     },
-  },
-  methods: {
-    ...mapActions('user', ['logout']),
-    handleAction(action) {
-      this[action]();
-    }
-  },
+    methods: {
+        ...mapActions('user', ['logout']),
+        handleAction(action) {
+            this[action]();
+        }
+    },
 };
 </script>
