@@ -37,34 +37,33 @@ export default {
         }
     },
     actions: {
-        async getAccountAmount({commit}, number) {
-            console.log('get account amount');
-            let response = await BankAccountService.getAccountAmount(number)
-            if (response.error === 0) {
-                commit('updateAccountAmount', response.data)
-                commit('updateAccountError', undefined)
-            } else {
-                console.log(response.data)
-                commit('updateAccountError', response.data)
-            }
-        },
-        async getAccountTransactions({commit}, number) {
-            console.log('get account transactions');
-            let response = await BankAccountService.getAccountTransactions(number)
-            if (response.error === 0) {
-                commit('updateAccountTransactions', response.data)
-                commit('updateAccountError', undefined)
-            } else {
-                console.log(response.data)
-                commit('updateAccountError', -1)
-            }
-        },
+        // async getAccountAmount({commit}, number) {
+        //     console.log('get account amount');
+        //     let response = await BankAccountService.getAccountAmount(number)
+        //     if (response.error === 0) {
+        //         commit('updateAccountAmount', response.data)
+        //         commit('updateAccountError', undefined)
+        //     } else {
+        //         console.log(response.data)
+        //         commit('updateAccountError', response.data)
+        //     }
+        // },
+        // async getAccountTransactions({commit}, number) {
+        //     console.log('get account transactions');
+        //     let response = await BankAccountService.getAccountTransactions(number)
+        //     if (response.error === 0) {
+        //         commit('updateAccountTransactions', response.data)
+        //         commit('updateAccountError', undefined)
+        //     } else {
+        //         console.log(response.data)
+        //         commit('updateAccountError', -1)
+        //     }
+        // },
         async loginToBankAccount({commit}, number) {
             console.log('get bank account from account number');
             let response = await BankAccountService.loginToBankAccount(number);
 
             if (response.error === 0) {
-                console.log(response.data)
                 commit('updateLoggedBankAccount', response.data);
                 commit('updateAccountError', undefined)
                 commit('updateHistoriqueLoggedBankAccount', response.data.number);

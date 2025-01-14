@@ -7,21 +7,22 @@
 
             <div class="mb-3">
                 <label class="form-label" for="login">Account number</label>
-                <input id="login" v-model="number" class="form-control" type="text" list="listSuggest">
+                <input id="login" v-model="number" class="form-control" list="listSuggest" type="text" @input="isAccountNumberValid">
                 <datalist id="listSuggest">
                     <option value="FRDRMAD578901234567890-0000666">FRDRMAD578901234567890-0000666</option>
                     <option value="FRSHOP4578901234567890-0000999">FRSHOP4578901234567890-0000999</option>
                 </datalist>
             </div>
 
-            <button :disabled="!isAccountNumberValid" class="btn btn-primary" @click="loginToBankAccount(number)">
+            <button :disabled="!validAccountNumber" class="btn btn-primary" @click="loginToBankAccount(number)">
                 Login
             </button>
         </div>
         <div class="containerHistorique">
             <h1>Historique de connexion</h1>
             <ul>
-                <li v-for="(number, index) in historiqueLoggedBankAccount" :key="index" @click="setAccountNumber(number)">
+                <li v-for="(number, index) in historiqueLoggedBankAccount" :key="index"
+                    @click="setAccountNumber(number)">
                     {{ number }}
                 </li>
             </ul>
@@ -37,6 +38,7 @@ export default {
     name: "BankLogin",
     data: () => ({
         number: "",
+        validAccountNumber: false,
     }),
     computed: {
         ...mapState('bank', ['accountError']),
@@ -46,7 +48,7 @@ export default {
         ...mapActions('bank', ['loginToBankAccount']),
         isAccountNumberValid() {
             const rexp = RegExp("^[A-Za-z0-9]{22}-[0-9]{7}$", "g");
-            return rexp.test(this.number);
+            this.validAccountNumber = rexp.test(this.number);
         },
         setAccountNumber(number) {
             this.number = number;
