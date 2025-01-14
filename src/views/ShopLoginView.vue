@@ -47,8 +47,8 @@ import {mapActions, mapState} from 'vuex'
 export default {
   name: 'ShopLoginView',
   data: () => ({
-    login: '',
-    password: '',
+    login: 'drmad',
+    password: 'drmad',
   }),
   computed: {
     ...mapState('user', ['loggedUser']),

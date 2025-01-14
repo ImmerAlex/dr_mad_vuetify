@@ -4,12 +4,7 @@
       <v-card-title class="text-h5 d-flex align-center">
         <span>Mes commandes</span>
         <v-spacer></v-spacer>
-        <v-btn
-          color="primary"
-          :loading="loading"
-          @click="refreshOrders"
-          icon
-        >
+        <v-btn color="primary" :loading="loading" @click="refreshOrders" icon >
           <v-icon>mdi-refresh</v-icon>
         </v-btn>
       </v-card-title>
@@ -28,14 +23,14 @@
           <v-progress-circular indeterminate></v-progress-circular>
         </div>
 
-        <div v-else-if="!orders.length" class="text-center my-4">
+        <div v-else-if="!userOrders || !userOrders.length" class="text-center my-4">
           <v-icon size="48" color="grey">mdi-cart-off</v-icon>
           <div class="text-body-1 text-grey mt-2">
             Aucune commande trouvée
           </div>
         </div>
 
-        <table class="table" v-else>
+        <table v-else class="table">
           <thead>
             <tr>
               <th>Référence</th>
@@ -47,7 +42,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="order in orders" :key="order.uuid">
+            <tr v-for="order in userOrders" :key="order.uuid">
               <td>{{ order.uuid }}</td>
               <td>{{ formatDate(order.date.$date) }}</td>
               <td>
@@ -95,7 +90,7 @@
 </template>
 
 <script>
-import OrderService from '@/services/orders.service'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'ShopOrders',
@@ -103,39 +98,33 @@ export default {
   data() {
     return {
       orders: [],
-      loading: false,
+      loading: true,
       error: null
     }
   },
 
   created() {
-    this.fetchOrders()
+    if (!this.isLogged) {
+      this.$router.push({name: 'shoplogin'})
+    }
+    this.fetchOrders();
   },
 
-  methods: {
-    async fetchOrders() {
-      this.loading = true
-      this.error = null
+  computed: {
+    ...mapGetters('user', ['isLogged']),
+    ...mapGetters('user', ['loggedUser']),
+    ...mapGetters('user', ['userOrders']),
+  },
 
-      try {
-        // pour visualiser la jolie animation de chargement :)
-        await new Promise(resolve => setTimeout(resolve, 500))
-        // TODO: Récupérer l'ID de l'utilisateur connecté depuis le store
-        const userId = "66d58122c08b4d64db14cd04" 
-        const response = await OrderService.getUserOrders(userId)
-        
-        if (response.error) {
-          this.error = response.data
-        } else {
-          this.orders = response.data
-        }
-      } catch (err) {
-        this.error = "Impossible de récupérer vos commandes"
-        console.error('Erreur lors de la récupération des commandes:', err)
-      } finally {
+
+  methods: {
+    fetchOrders() {
+      // pour visualiser la jolie animation de chargement :)
+      this.loading = true;
+      setTimeout(() => {
         this.loading = false
-      }
-    },
+      }, 500);
+   },
 
     refreshOrders() {
       this.fetchOrders()

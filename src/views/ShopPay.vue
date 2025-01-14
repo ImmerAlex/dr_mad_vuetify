@@ -15,7 +15,7 @@
             outlined
             clearable
             :error-messages="error"
-          ></v-text-field>
+            ></v-text-field>
 
           <div v-if="filteredOrder">
             <p><strong>Commande trouvée :</strong></p>
@@ -34,7 +34,7 @@
               :disabled="!filteredOrder"
               @click="handlePayment"
               :loading="loading"
-            >
+              >
               <v-icon left>mdi-cash-register</v-icon>
               Payer
             </v-btn>
@@ -42,26 +42,68 @@
         </v-form>
       </v-card-text>
 
+      <v-dialog v-model="showPaymentModal" max-width="500px">
+        <v-card>
+          <v-card-title class="text-h5">
+            Confirmation de paiement
+          </v-card-title>
+
+          <v-card-text>
+            <v-form @submit.prevent="confirmPayment">
+              <p class="mb-4">Commande : {{ filteredOrder?.uuid }}</p>
+              <p class="mb-4">Montant : {{ filteredOrder?.total }}€</p>
+
+              <v-text-field
+                v-model="transactionId"
+                label="ID de transaction"
+                :rules="[v => !!v || 'L\'ID de transaction est requis']"
+                outlined
+                clearable
+                :error-messages="transactionError"
+                ></v-text-field>
+            </v-form>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="grey darken-1"
+              text
+              @click="closePaymentModal"
+              >
+              Annuler
+            </v-btn>
+              <v-btn
+                color="primary"
+                :disabled="!transactionId"
+                :loading="loading"
+                @click="confirmPayment"
+                >
+                Confirmer le paiement
+              </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
       <v-snackbar
         v-model="snackbar"
         :color="snackbarColor"
         timeout="3000"
-      >
+        >
         {{ snackbarText }}
         <template v-slot:action="{ attrs }">
           <v-btn
             text
             v-bind="attrs"
             @click="snackbar = false"
-          >
+            >
             Fermer
           </v-btn>
         </template>
       </v-snackbar>
     </v-card>
-    loggedUser Id : {{ loggedUser._id }}
-    {{ userOrders }}
-  </v-container></template>
+  </v-container>
+</template>
 
 <script>
   import OrderService from '@/services/orders.service'
@@ -82,10 +124,17 @@
         loading: false,
         snackbar: false,
         snackbarText: '',
-        snackbarColor: 'success'
+        snackbarColor: 'success',
+        showPaymentModal: false,
+        transactionId: '',
+        transactionError: null
       }
     },
     created() {
+      if (!this.isLogged) {
+        this.$router.push({name: 'shoplogin'})
+      }
+
       if (this.$route.params.orderId) {
         this.orderIdInput = this.$route.params.orderId
       }
@@ -96,11 +145,14 @@
       ...mapGetters('user', ['userOrders']),
       filteredOrder() {
         if (!this.orderIdInput || !this.userOrders) return null
-        return this.userOrders.find(order => order.uuid === this.orderIdInput)
+        return this.userOrders.find(order => 
+          order.uuid === this.orderIdInput && 
+          order.status === 'pending'
+        )
       }
     },
     methods: {
-      async handlePayment() {
+      handlePayment() {
         if (!this.filteredOrder) {
           this.error = 'Aucune commande valide trouvée pour cet UUID'
           this.snackbarColor = 'error'
@@ -109,36 +161,55 @@
           return
         }
 
-  this.loading = true
-  this.error = null
+        this.showPaymentModal = true
+      },
 
-  try {
-    const response = await OrderService.payOrder(this.filteredOrder.uuid)
-    if (response.error === 0) {
-      this.snackbarColor = 'success'
-      this.snackbarText = 'Paiement effectué avec succès'
-      this.snackbar = true
+      closePaymentModal() {
+        this.showPaymentModal = false
+        this.transactionId = ''
+        this.transactionError = null
+      },
 
-      // Attendre un peu pour que l'utilisateur puisse voir le message de succès
-      setTimeout(() => {
-        this.$router.push({ name: 'shoporders' })
-      }, 1000)
-    } else {
-      this.error = response.data
-      this.snackbarColor = 'error'
-      this.snackbarText = response.data
-      this.snackbar = true
-    }
-  } catch (error) {
-    this.error = 'Une erreur est survenue lors du paiement'
-    this.snackbarColor = 'error'
-    this.snackbarText = 'Une erreur est survenue lors du paiement'
-    this.snackbar = true
-    console.error('Erreur lors du paiement:', error)
-  } finally {
-    this.loading = false
-  }
-}
+      async confirmPayment() {
+        if (!this.transactionId) {
+          this.transactionError = 'L\'ID de transaction est requis'
+          return
+        }
+
+        this.loading = true
+        this.transactionError = null
+
+        try {
+          const response = await OrderService.payOrder({
+            orderId: this.filteredOrder.uuid,
+            transactionId: this.transactionId
+          })
+
+          if (response.error === 0) {
+            this.snackbarColor = 'success'
+            this.snackbarText = 'Paiement effectué avec succès'
+            this.snackbar = true
+            this.closePaymentModal()
+
+            setTimeout(() => {
+              this.$router.push({ name: 'shoporders' })
+            }, 1000)
+          } else {
+            this.transactionError = response.data
+            this.snackbarColor = 'error'
+            this.snackbarText = response.data
+            this.snackbar = true
+          }
+        } catch (error) {
+          this.transactionError = 'Une erreur est survenue lors du paiement'
+          this.snackbarColor = 'error'
+          this.snackbarText = 'Une erreur est survenue lors du paiement'
+          this.snackbar = true
+          console.error('Erreur lors du paiement:', error)
+        } finally {
+          this.loading = false
+        }
+      }  
     },
   }
 </script>
