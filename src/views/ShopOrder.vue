@@ -104,14 +104,14 @@ export default {
   },
 
   created() {
-    if (!this.isLogged) {
+    if (!this.isLoggedUser) {
       this.$router.push({name: 'shoplogin'})
     }
     this.fetchOrders();
   },
 
   computed: {
-    ...mapGetters('user', ['isLogged']),
+    ...mapGetters('user', ['isLoggedUser']),
     ...mapGetters('user', ['loggedUser']),
     ...mapGetters('user', ['userOrders']),
   },

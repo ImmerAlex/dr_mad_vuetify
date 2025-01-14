@@ -57,7 +57,7 @@ export default {
         links() {
             const links = [];
 
-            if (!this.isLogged) {
+            if (!this.isLoggedUser) {
                 if (!this.isLoggedBankAccount) {
                     links.push({title: "Bank", icon: "mdi-bank", to: {name: 'bankLogin'}});
                 } else {
