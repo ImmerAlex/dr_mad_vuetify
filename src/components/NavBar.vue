@@ -66,7 +66,12 @@ export default {
 
                 links.push({title: "Login", icon: "mdi-login", to: {name: 'shoplogin'}});
             } else {
-                links.push({title: "Bank", icon: "mdi-bank", to: {name: 'bankHome'}});
+                if (!this.isLoggedBankAccount) {
+                    links.push({title: "Bank", icon: "mdi-bank", to: {name: 'bankLogin'}});
+                } else {
+                    links.push({title: "Bank", icon: "mdi-bank", to: {name: 'bankSolde'}});
+                }
+
                 links.push({title: "Home", icon: "mdi-home", to: {name: 'home'}});
                 links.push({title: "Shop", icon: "mdi-account", to: {name: 'shophome'}});
                 links.push({title: "Buy", icon: "mdi-account", to: {name: 'shopbuy'}});
