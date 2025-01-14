@@ -4,7 +4,7 @@ import router from '@/router/index'
 export default {
     namespaced: true,
     state: () => ({
-        loggedBankAccount: undefined,
+        loggedBankAccount: null,
         historiqueLoggedBankAccount: [],
         accountAmount: undefined,
         accountTransactions: [],
@@ -79,11 +79,8 @@ export default {
         }
     },
     getters: {
-        historiqueLoggedBankAccount: state => {
-            return state.historiqueLoggedBankAccount
-        },
-        isLoggedBankAccount: state => {
-            return state.loggedBankAccount !== undefined
-        }
+        historiqueLoggedBankAccount: (state) => state.historiqueLoggedBankAccount,
+        isLoggedBankAccount: (state) => state.loggedBankAccount !== null,
+        getAccountAmount: (state) => state.loggedBankAccount !== null ? state.accountAmount : undefined,
     }
 }
