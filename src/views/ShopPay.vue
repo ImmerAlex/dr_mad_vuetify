@@ -131,7 +131,7 @@
       }
     },
     created() {
-      if (!this.isLogged) {
+      if (!this.isLoggedUser) {
         this.$router.push({name: 'shoplogin'})
       }
 
