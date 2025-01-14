@@ -13,6 +13,7 @@ import ShopOrder from '@/views/ShopOrder.vue';
 import BankLogin from "@/components/banque/BankLogin.vue";
 import BanqueHome from "@/components/banque/BanqueHome.vue";
 import BanqueSolde from "@/components/banque/BanqueSolde.vue";
+import BanqueTransactions from "@/components/banque/BanqueTransactions.vue";
 
 Vue.use(VueRouter)
 
@@ -94,6 +95,11 @@ const routes = [
                         path: 'solde',
                         name: 'bankSolde',
                         component: BanqueSolde,
+                    },
+                    {
+                        path: 'transactions',
+                        name: 'bankTransactions',
+                        component: BanqueTransactions,
                     }
                 ]
             }

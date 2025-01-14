@@ -4,7 +4,7 @@ import router from '@/router/index'
 export default {
     namespaced: true,
     state: () => ({
-        loggedBankAccount: null,
+        loggedBankAccount: undefined,
         historiqueLoggedBankAccount: [],
         accountAmount: undefined,
         accountTransactions: [],
@@ -21,9 +21,6 @@ export default {
             }
             state.historiqueLoggedBankAccount.unshift(bankAccount)
         },
-        updateAccountAmount(state, amount) {
-            state.accountAmount = amount
-        },
         updateAccountTransactions(state, transactions) {
             state.accountTransactions = transactions
         },
@@ -38,17 +35,6 @@ export default {
         }
     },
     actions: {
-        async getAccountAmount({commit}, number) {
-            console.log('get account amount');
-            let response = await BankAccountService.getAccountAmount(number)
-            if (response.error === 0) {
-                commit('updateAccountAmount', response.data)
-                commit('updateAccountError', undefined)
-            } else {
-                console.log(response.data)
-                commit('updateAccountError', response.data)
-            }
-        },
         async getAccountTransactions({commit}, number) {
             console.log('get account transactions');
             let response = await BankAccountService.getAccountTransactions(number)
@@ -76,11 +62,11 @@ export default {
         },
         logoutBankAccount({commit}) {
             commit('logoutBankAccount')
+            router.push({name: 'bankLogin'}).then(r => r)
         }
     },
     getters: {
         historiqueLoggedBankAccount: (state) => state.historiqueLoggedBankAccount,
-        isLoggedBankAccount: (state) => state.loggedBankAccount !== null,
-        getAccountAmount: (state) => state.loggedBankAccount !== null ? state.accountAmount : undefined,
+        isLoggedBankAccount: (state) => state.loggedBankAccount !== undefined,
     }
 }

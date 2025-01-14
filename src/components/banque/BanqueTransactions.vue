@@ -38,10 +38,13 @@
             <tbody>
             <tr v-for="(transaction, index) in filterTransactions()" :key="index">
                 <td>
-                    <input :id="transaction._id" type="checkbox">
+                    <input :id="transaction._id" type="checkbox" v-model="selectedTransactions"
+                           :value="transaction._id">
                 </td>
+
                 <td v-if="transaction.amount > 0" class="bg-success text-white">{{ transaction.amount }}</td>
                 <td v-else class="bg-danger text-white">{{ formatNumber(transaction.amount, 'fr-FR', 'EUR') }}</td>
+
                 <td>{{ formatDateHeure(transaction.date) }}</td>
                 <td>
                     <button class="btn btn-primary" @click="displayDetail(transaction._id)">Detail</button>
@@ -55,21 +58,22 @@
 </template>
 
 <script>
+import {mapActions, mapState} from "vuex";
+
 export default {
     name: "BanqueTransactions",
-    props: {
-        accountTransactions: {
-            type: Array,
-            required: true,
-        },
-    },
     data: () => ({
         dateDebut: '',
         dateFin: '',
         modal: false,
         modalData: [],
+        selectedTransactions: []
     }),
+    computed: {
+        ...mapState('bank', ['loggedBankAccount', "accountTransactions"]),
+    },
     methods: {
+        ...mapActions('bank', ['getAccountTransactions']),
         formatDateHeure(date) {
             const d = new Date(date);
             const day = String(d.getDate()).padStart(2, '0');
@@ -80,10 +84,11 @@ export default {
             return `${day}/${month}/${year} ${hours}:${minutes}`;
         },
         filterTransactions() {
+            const startDate = this.dateDebut ? new Date(this.dateDebut) : new Date(-8640000000000000);
+            const endDate = this.dateFin ? new Date(this.dateFin) : new Date(8640000000000000);
+
             return this.accountTransactions.filter(transaction => {
                 const transactionDate = new Date(transaction.date);
-                const startDate = this.dateDebut ? new Date(this.dateDebut) : new Date(-8640000000000000);
-                const endDate = this.dateFin ? new Date(this.dateFin) : new Date(8640000000000000);
                 return transactionDate >= startDate && transactionDate <= endDate;
             });
         },
@@ -95,14 +100,9 @@ export default {
             this.modal = true;
         },
         displayDetails() {
-            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-
-            checkboxes.forEach(checkbox => {
-                if (checkbox.checked) {
-                    this.modalData.push(this.accountTransactions.find(transaction => transaction._id === checkbox.id));
-                }
-            });
-
+            this.modalData = this.accountTransactions.filter(transaction =>
+                this.selectedTransactions.includes(transaction._id)
+            );
             this.modal = true;
         },
         hideModal() {
@@ -110,6 +110,9 @@ export default {
             this.modalData = [];
         },
     },
+    created() {
+        this.getAccountTransactions(this.loggedBankAccount.number);
+    }
 };
 </script>
 

@@ -7,20 +7,6 @@
                 </v-card-title>
 
                 <v-card-text class="d-flex flex-column gap-3">
-                    <!--                        <v-form @submit.prevent="confirmPayment">-->
-                    <!--                            <p class="mb-4">Commande : {{ filteredOrder?.uuid }}</p>-->
-                    <!--                            <p class="mb-4">Montant : {{ filteredOrder?.total }}€</p>-->
-
-                    <!--                            <v-text-field-->
-                    <!--                                v-model="transactionId"-->
-                    <!--                                label="ID de transaction"-->
-                    <!--                                :rules="[v => !!v || 'L\'ID de transaction est requis']"-->
-                    <!--                                outlined-->
-                    <!--                                clearable-->
-                    <!--                                :error-messages="transactionError"-->
-                    <!--                            ></v-text-field>-->
-                    <!--                        </v-form>-->
-
                     <v-btn color="primary" @click="closeNavModal">
                         <router-link :to="{name: 'bankSolde'}" class="link">solde</router-link>
                     </v-btn>
@@ -32,18 +18,12 @@
                     <v-btn color="warning" @click="closeNavModal">
                         <router-link :to="{name: 'bankTransactions'}" class="link">historique</router-link>
                     </v-btn>
-
                 </v-card-text>
 
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn
-                        color="grey darken-1"
-                        text
-                        @click="closeNavModal"
-                    >
-                        fermer
-                    </v-btn>
+                    <v-btn color="error" @click="logoutBankAccount">deconnexion</v-btn>
+                    <v-btn color="grey darken-1" @click="closeNavModal">fermer</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -63,7 +43,7 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
     name: "BankAccountView",
@@ -71,6 +51,7 @@ export default {
         showNavModal: false,
     }),
     methods: {
+        ...mapActions('bank', ['logoutBankAccount']),
         ...mapGetters('bank', ['isLoggedBankAccount']),
         openNavModal() {
             this.showNavModal = true;
