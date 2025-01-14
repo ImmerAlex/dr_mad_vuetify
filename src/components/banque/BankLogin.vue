@@ -7,7 +7,8 @@
 
             <div class="mb-3">
                 <label class="form-label" for="login">Account number</label>
-                <input id="login" v-model="number" class="form-control" list="listSuggest" type="text" @input="isAccountNumberValid">
+                <input id="login" v-model="number" class="form-control" list="listSuggest" type="text"
+                       @input="isAccountNumberValid">
                 <datalist id="listSuggest">
                     <option value="FRDRMAD578901234567890-0000666">FRDRMAD578901234567890-0000666</option>
                     <option value="FRSHOP4578901234567890-0000999">FRSHOP4578901234567890-0000999</option>
@@ -20,12 +21,10 @@
         </div>
         <div class="containerHistorique">
             <h1>Historique de connexion</h1>
-            <ul>
-                <li v-for="(number, index) in historiqueLoggedBankAccount" :key="index"
-                    @click="setAccountNumber(number); isAccountNumberValid()">
-                    {{ number }}
-                </li>
-            </ul>
+            <p class="ml-4 numberAccountHist" v-for="(number, index) in historiqueLoggedBankAccount" :key="index"
+               @click="setAccountNumber(number); isAccountNumberValid()">
+                {{ number }}
+            </p>
             <p v-if="historiqueLoggedBankAccount.length === 0">Aucun historique</p>
         </div>
     </div>
@@ -64,6 +63,10 @@ export default {
 
 .containerHistorique {
     width: 40%;
+}
+
+.numberAccountHist {
+    cursor: pointer;
 }
 
 @media (max-width: 768px) {
