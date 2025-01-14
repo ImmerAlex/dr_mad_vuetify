@@ -7,17 +7,20 @@
                 </v-card-title>
 
                 <v-card-text class="d-flex flex-column gap-3">
-                    <v-btn color="primary" @click="closeNavModal">
-                        <router-link :to="{name: 'bankSolde'}" class="link">solde</router-link>
-                    </v-btn>
 
-                    <v-btn color="success" @click="closeNavModal">
-                        <router-link :to="{name: 'bankVirement'}" class="link">virement</router-link>
-                    </v-btn>
+                    <router-link :to="{name: 'bankSolde'}" class="link">
+                        <v-btn color="primary" class="w-100" @click="closeNavModal">solde</v-btn>
+                    </router-link>
 
-                    <v-btn color="warning" @click="closeNavModal">
-                        <router-link :to="{name: 'bankTransactions'}" class="link">historique</router-link>
-                    </v-btn>
+
+                    <router-link :to="{name: 'bankVirement'}" class="link">
+                        <v-btn color="success" class="w-100" @click="closeNavModal">virement</v-btn>
+                    </router-link>
+
+
+                    <router-link :to="{name: 'bankTransactions'}" class="link">
+                        <v-btn color="warning" class="w-100" @click="closeNavModal">historique</v-btn>
+                    </router-link>
                 </v-card-text>
 
                 <v-card-actions>

@@ -60,6 +60,10 @@ export default {
                 commit('updateAccountError', response.data)
             }
         },
+        async createVirment({commit}, amount, dest) {
+            console.log('create virment', amount, dest);
+            commit('updateAccountError', undefined)
+        },
         logoutBankAccount({commit}) {
             commit('logoutBankAccount')
             router.push({name: 'bankLogin'}).then(r => r)

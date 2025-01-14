@@ -14,6 +14,7 @@ import BankLogin from "@/components/banque/BankLogin.vue";
 import BanqueHome from "@/components/banque/BanqueHome.vue";
 import BanqueSolde from "@/components/banque/BanqueSolde.vue";
 import BanqueTransactions from "@/components/banque/BanqueTransactions.vue";
+import BanqueVirement from "@/components/banque/BanqueVirement.vue";
 
 Vue.use(VueRouter)
 
@@ -100,6 +101,11 @@ const routes = [
                         path: 'transactions',
                         name: 'bankTransactions',
                         component: BanqueTransactions,
+                    },
+                    {
+                        path: 'virements',
+                        name: 'bankVirement',
+                        component: BanqueVirement,
                     }
                 ]
             }

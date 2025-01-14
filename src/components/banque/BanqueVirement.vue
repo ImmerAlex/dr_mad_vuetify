@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import {mapActions} from "vuex";
+
 export default {
     name: "BanqueVirement",
     data: () => ({
@@ -34,9 +36,7 @@ export default {
         destAccount: "",
     }),
     methods: {
-        transfer() {
-            // this.$store.dispatch('bank/transfer', {amount: this.amount, destAccount: this.destAccount});
-        }
+        ...mapActions('bank', ['createVirement']),
     }
 };
 </script>
