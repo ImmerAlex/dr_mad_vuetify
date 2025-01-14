@@ -71,7 +71,6 @@ const routes = [
     name: 'bankaccount',
     component: BankAccountView
   }
-
 ]
 
 const router = new VueRouter({

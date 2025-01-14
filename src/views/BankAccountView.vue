@@ -85,8 +85,8 @@
 // import { mapActions, mapMutations, mapState } from "vuex";
 
 import {mapState} from "vuex";
-import BankLogin from "@/components/BankLogin.vue";
-import MainBank from "@/components/MainBank.vue";
+import BankLogin from "@/components/banque/BankLogin.vue";
+import MainBank from "@/components/banque/MainBank.vue";
 
 export default {
   name: "BankAccountView",

@@ -22,7 +22,7 @@
             <h1>Historique de connexion</h1>
             <ul>
                 <li v-for="(number, index) in historiqueLoggedBankAccount" :key="index"
-                    @click="setAccountNumber(number)">
+                    @click="setAccountNumber(number); isAccountNumberValid()">
                     {{ number }}
                 </li>
             </ul>
