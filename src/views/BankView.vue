@@ -16,7 +16,7 @@
 <script>
 import {mapState} from "vuex";
 // import BankLogin from "@/components/banque/BankLogin.vue";
-// import MainBank from "@/components/banque/BanqueHome.vue";
+// import MainBank from "@/components/banque/BankHome.vue";
 
 export default {
     name: "BankAccountView",

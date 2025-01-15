@@ -11,10 +11,10 @@ import ShopPay from '@/views/ShopPay.vue'
 import ShopBuy from '@/views/ShopBuy.vue';
 import ShopOrder from '@/views/ShopOrder.vue';
 import BankLogin from "@/components/banque/BankLogin.vue";
-import BanqueHome from "@/components/banque/BanqueHome.vue";
-import BanqueSolde from "@/components/banque/BanqueSolde.vue";
-import BanqueTransactions from "@/components/banque/BanqueTransactions.vue";
-import BanqueVirement from "@/components/banque/BanqueVirement.vue";
+import BanqueHome from "@/components/banque/BankHome.vue";
+import BanqueSolde from "@/components/banque/BankSolde.vue";
+import BanqueTransactions from "@/components/banque/BankTransactions.vue";
+import BanqueVirement from "@/components/banque/BankVirement.vue";
 
 Vue.use(VueRouter)
 
