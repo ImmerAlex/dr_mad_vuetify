@@ -5,7 +5,7 @@
                 <slot name="header" />
             </v-card-title>
 
-            <v-card-text class="d-flex flex-column gap-3">
+            <v-card-text class="d-flex flex-column">
                 <slot name="content" />
             </v-card-text>
 
@@ -13,7 +13,7 @@
                 <v-spacer></v-spacer>
                 <slot name="actions" />
 
-                <v-btn color="grey darken-1" class="text-white" @click="closeNavModal">fermer</v-btn>
+                <v-btn color="grey darken-1" class="text-white" @click="closeNavModal">close</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

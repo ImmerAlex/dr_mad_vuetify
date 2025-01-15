@@ -6,15 +6,15 @@
             </template>
 
             <template v-slot:content>
-                <router-link :to="{name: 'bankSolde'}" class="link">
+                <router-link :to="{name: 'bankSolde'}" class="link mb-3">
                     <v-btn color="primary" class="w-100" @click="handleCloseNavModal">solde</v-btn>
                 </router-link>
 
-                <router-link :to="{name: 'bankVirement'}" class="link">
+                <router-link :to="{name: 'bankVirement'}" class="link mb-3">
                     <v-btn color="success" class="w-100" @click="handleCloseNavModal">virement</v-btn>
                 </router-link>
 
-                <router-link :to="{name: 'bankTransactions'}" class="link">
+                <router-link :to="{name: 'bankTransactions'}" class="link mb-3">
                     <v-btn color="warning" class="w-100" @click="handleCloseNavModal">historique</v-btn>
                 </router-link>
             </template>
