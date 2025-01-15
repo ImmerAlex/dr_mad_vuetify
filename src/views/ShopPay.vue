@@ -53,7 +53,7 @@
                 <v-form class="d-flex flex-column gap-3 mb-3" @submit.prevent="confirmPayment">
                     <div>
                         <label class="form-label" for="transactionId">ID de transaction</label>
-                        <input id="transactionId" v-model="transactionId" class="form-control" name="transactionId"
+                        <input id="transactionId" v-model="transactionUuid" class="form-control" name="transactionId"
                                placeholder="Type here..." type="text"/>
                     </div>
                 </v-form>
@@ -66,8 +66,10 @@
 
                     <template v-slot:item="{ item }">
                         <tr>
-                            <td>{{ formatDate(item.date) }}</td>
-                            <td :class="item.amount > 0 ? 'bg-success text-white' : 'bg-danger text-white'">{{ formatPrice(item.amount) }}</td>
+                            <td>{{ formatDate(item.date.$date) }}</td>
+                            <td :class="item.amount > 0 ? 'bg-success text-white' : 'bg-danger text-white'">
+                                {{ formatPrice(item.amount) }}
+                            </td>
                             <td>
                                 <v-btn
                                     color="primary"
@@ -87,7 +89,7 @@
 
             <template v-slot:actions>
                 <v-btn
-                    :disabled="!transactionId"
+                    :disabled="!transactionUuid"
                     color="success"
                     @click="confirmPayment"
                 >
@@ -126,7 +128,7 @@ export default {
     },
     data: () => ({
         orderIdInput: '',
-        transactionId: '',
+        transactionUuid: '',
         headers: [
             {text: 'Date', value: 'date'},
             {text: 'Montant', value: 'amount'},
@@ -135,13 +137,12 @@ export default {
         displayErrorModal: false,
     }),
     computed: {
-        ...mapGetters('user', ['isLoggedUser', 'userOrders', 'orderError']),
+        ...mapGetters('user', ['isLoggedUser', 'userOrders', 'orderError', 'loggedUser']),
         ...mapGetters('bank', ['accountTransactions']),
 
         order() {
             return this.userOrders?.find(order =>
-                order.uuid === this.orderIdInput &&
-                order.status === 'pending'
+                order.uuid === this.orderIdInput || order.uuid === this.orderId
             ) || {};
         }
     },
@@ -151,7 +152,7 @@ export default {
             this.$refs.modalComponent.openNavModal();
         },
         setTransactionId(id) {
-            this.transactionId = id;
+            this.transactionUuid = id;
         },
         formatDate(date) {
             return new Date(date).toLocaleString('fr-FR', {
@@ -169,14 +170,25 @@ export default {
             });
         },
         async confirmPayment() {
-            await this.makePayment()
-                .then(() => {
-                    this.displayErrorModal = true;
-
-                    setTimeout(() => {
-                        this.displayErrorModal = false;
-                    }, 2500);
+            try {
+                await this.$store.dispatch('user/makePayment', {
+                    userId: this.loggedUser._id,
+                    orderUuid: this.order.uuid,
+                    transactionUuid: this.transactionUuid
                 });
+
+                this.displayErrorModal = true;
+
+                setTimeout(() => {
+                    this.displayErrorModal = false;
+
+                    if (this.orderError.error === 0) {
+                        this.$router.push({name: 'shoporders'});
+                    }
+                }, 2500);
+            } catch (error) {
+                console.error('Payment failed', error);
+            }
         },
     },
     created() {

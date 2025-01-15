@@ -42,7 +42,7 @@
                     <td v-if="item.amount >= 0" class="bg-success text-white">{{ item.amount }}</td>
                     <td v-else class="bg-danger text-white">{{ formatNumber(item.amount, 'fr-FR', 'EUR') }}</td>
 
-                    <td>{{ formatDateHeure(item.date) }}</td>
+                    <td>{{ formatDateHeure(item.date.$date) }}</td>
 
                     <td v-if="item.amount >= 0">D</td>
                     <td v-else>S</td>
@@ -127,7 +127,7 @@ export default {
             const endDate = this.dateFin ? new Date(this.dateFin) : new Date(8640000000000000);
 
             return this.accountTransactions.filter(transaction => {
-                const transactionDate = new Date(transaction.date);
+                const transactionDate = new Date(transaction.date.$date);
                 return transactionDate >= startDate && transactionDate <= endDate;
             });
         },

@@ -77,11 +77,54 @@ function loginToBankAccount(number) {
     return {error: 0, status: 200, data: account}
 }
 
+function getUserOrderByUuid(userId, orderUuid) {
+    // Trouver l'utilisateur dans la liste des shopusers
+    const user = shopusers.find(user => user._id === userId);
+
+    if (!user) {
+        return {
+            error: -1,
+            status: 404,
+            data: 'Utilisateur non trouvé'
+        }
+    }
+
+    // Trouver la commande de l'utilisateur
+    const order = user.orders.find(order => order.uuid === orderUuid);
+
+    if (!order) {
+        return {
+            error: -1,
+            status: 404,
+            data: 'Commande non trouvée'
+        }
+    }
+
+    // Retourner la commande de l'utilisateur
+    return {
+        error: 0,
+        status: 200,
+        data: order || {} // Si user.orders n'existe pas, retourner un tableau vide
+    }
+}
+
+function getTransaction(transactionUuid) {
+    if (!transactionUuid) return {error: -1, status: 404, data: 'aucun numéro de transaction fourni'}
+
+    let transaction = transactions.find(t => t.uuid === transactionUuid)
+
+    if (!transaction) return {error: -1, status: 404, data: 'numéro de transaction incorrect'}
+
+    return {error: 0, status: 200, data: transaction}
+}
+
 export default {
     loginUser,
     getAllViruses,
     getAccountAmount,
     getAccountTransactions,
     getUserOrders,
-    loginToBankAccount
+    loginToBankAccount,
+    getUserOrderByUuid,
+    getTransaction,
 }

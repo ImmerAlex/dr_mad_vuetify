@@ -4,6 +4,14 @@ async function getUserOrdersFromLocalSource(userId) {
     return LocalSource.getUserOrders(userId)
 }
 
+async function getUserOrderByUuidByLocalSource(userId, orderUuid) {
+    return LocalSource.getUserOrderByUuid(userId, orderUuid)
+}
+
+async function getTransactionFromLocalSource(transactionUuid) {
+    return LocalSource.getTransaction(transactionUuid)
+}
+
 async function getUserOrders(userId) {
     let response;
     try {
@@ -18,37 +26,54 @@ async function getUserOrders(userId) {
     return response
 }
 
-async function getUserOrderById(userId, orderId) {
-    const userOrders = getUserOrders(userId);
-    const order = userOrders.find(order => order.uuid === orderId);
+async function getOrderByUuid(userId, orderUuid) {
+    let response;
 
-    if (!order) {
-        return {
-            error: 1,
+    try {
+        response = await getUserOrderByUuidByLocalSource(userId, orderUuid)
+    } catch (err) {
+        response = {
+            error: -1,
             status: 404,
-            data: 'Commande non trouvé'
+            data: 'erreur réseau, impossible de récupérer la commande'
         }
     }
 
-    // Retourner la commande de l'utilisateur
+    return response
+}
+
+async function payOrder(userId, orderUuid, transactionUuid) {
+    const order = await getOrderByUuid(userId, orderUuid);
+
+    if (order.error === -1) {
+        return {
+            error: -1,
+            status: 404,
+            data: 'Commande non trouvée'
+        }
+    }
+
+    const transaction = await getTransactionFromLocalSource(transactionUuid);
+
+    if (transaction.error === -1) {
+        return {
+            error: -1,
+            status: 404,
+            data: 'Transaction non trouvée'
+        }
+    }
+
     return {
         error: 0,
         status: 200,
-        data: order || [] // Si user.orders n'existe pas, retourner un tableau vide
-    }
-}
-
-async function payOrder() {
-
-    return {
-        error: 0,
-        status: 404,
-        data: 'La commande n\'existe pas ou ne vous appartient pas'
+        data: {
+            ...order.data,
+            status: 'finalized',
+        }
     }
 }
 
 export default {
     payOrder,
     getUserOrders,
-    getUserOrderById,
 }

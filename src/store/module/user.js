@@ -18,24 +18,25 @@ export default {
         CLEAR_USER(state) {
             state.loggedUser = null;
         },
-        UPDATE_ORDER_STATUS(state, order, status) {
-            state.userOrders = state.userOrders.map(o => {
-                if (o.uuid === order.uuid) {
-                    o.status = status;
-                }
-                return o;
-            });
+        UPDATE_ORDERS(state, order) {
+            let orderIndex = state.userOrders.findIndex(o => o.uuid === order.uuid);
+
+            if (orderIndex !== -1) {
+                state.userOrders[orderIndex] = order;
+            } else {
+                state.userOrders.push(order);
+            }
         },
         SET_ORDER_ERROR(state, error) {
             state.orderError = error;
         },
     },
     actions: {
-        async makePayment({commit}) {
-            const response = await OrdersService.payOrder();
+        async makePayment({commit}, {userId, orderUuid, transactionUuid}) {
+            const response = await OrdersService.payOrder(userId, orderUuid, transactionUuid);
 
             if (response.error === 0) {
-                commit('UPDATE_ORDER_STATUS', response.data, 'finalized');
+                commit('UPDATE_ORDERS', response.data);
                 commit('SET_ORDER_ERROR', {error: response.error, message: 'Le paiement a été effectué avec succès'});
             } else {
                 commit('SET_ORDER_ERROR', {error: response.error, message: response.data});
