@@ -1,6 +1,5 @@
 <template>
     <v-container>
-        {{order}}
         <v-card class="mx-auto" max-width="600">
             <v-card-title class="text-h5">
                 Paiement de la commande
@@ -17,20 +16,20 @@
                         outlined
                     ></v-text-field>
 
-                    <div v-if="order">
+                    <div v-if="Object.keys(order).length === 0">
+                        <p style="color: red;">Aucune commande trouvée pour cet UUID.</p>
+                    </div>
+                    <div v-else>
                         <p><strong>Commande trouvée :</strong></p>
                         <p>UUID : {{ order.uuid }}</p>
                         <p>Montant : {{ order.total }}€</p>
                         <p>Statut : {{ order.status }}</p>
                     </div>
-                    <div v-else-if="orderIdInput">
-                        <p style="color: red;">Aucune commande trouvée pour cet UUID.</p>
-                    </div>
 
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn
-                            :disabled="!order"
+                            :disabled="Object.keys(order).length === 0"
                             color="primary"
                             @click="handleOpenNavModal"
                         >
@@ -126,12 +125,10 @@ export default {
         ...mapGetters('bank', ['accountTransactions']),
 
         order() {
-            if (!this.orderIdInput || !this.userOrders) return []
-
-            return this.userOrders.find(order =>
+            return this.userOrders?.find(order =>
                 order.uuid === this.orderIdInput &&
                 order.status === 'pending'
-            )
+            ) || {};
         }
     },
     methods: {
@@ -143,31 +140,31 @@ export default {
             this.transactionId = id;
         },
         formatDate(date) {
-            const d = new Date(date);
-            const day = String(d.getDate()).padStart(2, '0');
-            const month = String(d.getMonth() + 1).padStart(2, '0');
-            const year = d.getFullYear();
-            const hours = String(d.getHours()).padStart(2, '0');
-            const minutes = String(d.getMinutes()).padStart(2, '0');
-            return `${day}/${month}/${year} ${hours}:${minutes}`;
+            return new Date(date).toLocaleString('fr-FR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
         },
         formatPrice(price) {
             return Number(price).toLocaleString('fr-FR', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
-            })
+            });
         },
         confirmPayment() {
-
+            // Implementation of payment confirmation
         },
     },
     created() {
         if (!this.isLoggedUser) {
-            this.$router.push({name: 'shoplogin'})
+            this.$router.push({name: 'shoplogin'});
         }
 
         if (this.$route.params.orderId) {
-            this.orderIdInput = this.$route.params.orderId
+            this.orderIdInput = this.$route.params.orderId;
         }
     },
 }
