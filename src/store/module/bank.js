@@ -39,24 +39,20 @@ export default {
     },
     actions: {
         async getAccountTransactions({commit}, number) {
-            console.log('get account transactions');
             let response = await BankAccountService.getAccountTransactions(number)
             if (response.error === 0) {
                 commit('updateAccountTransactions', response.data)
                 commit('updateAccountError', undefined)
             } else {
-                console.log(response.data)
                 commit('updateAccountError', -1)
             }
         },
         async getAccountAmount({commit}, number){
-            console.log('get account amount');
             let response = await BankAccountService.getAccountAmount(number)
             if (response.error === 0) {
                 commit('updateAccountAmount', response.data)
                 commit('updateAccountError', undefined)
             } else {
-                console.log(response.data)
                 commit('updateAccountError', -1)
             }
         },
@@ -72,14 +68,12 @@ export default {
 
                 await router.push({name: 'bankSolde'})
             } else {
-                console.log(response.data);
                 commit('updateAccountError', response.data)
             }
         },
-        async createVirment({commit}, amount, dest) {
-            console.log('create virment', amount, dest);
-            commit('updateAccountError', undefined)
-        },
+        // async createVirment({commit}, amount, dest) {
+        //     commit('updateAccountError', undefined)
+        // },
         logoutBankAccount({commit}) {
             commit('logoutBankAccount')
             router.push({name: 'bankLogin'}).then(r => r)

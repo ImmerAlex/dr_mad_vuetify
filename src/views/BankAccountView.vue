@@ -1,40 +1,33 @@
 <template>
     <div>
-        <v-dialog v-model="showNavModal" max-width="500px">
-            <v-card>
-                <v-card-title class="text-h5">
-                    Navigation
-                </v-card-title>
+        <ModalComponent ref="modalComponent">
+            <template v-slot:header>
+                Navigation
+            </template>
 
-                <v-card-text class="d-flex flex-column gap-3">
+            <template v-slot:content>
+                <router-link :to="{name: 'bankSolde'}" class="link">
+                    <v-btn color="primary" class="w-100" @click="handleCloseNavModal">solde</v-btn>
+                </router-link>
 
-                    <router-link :to="{name: 'bankSolde'}" class="link">
-                        <v-btn color="primary" class="w-100" @click="closeNavModal">solde</v-btn>
-                    </router-link>
+                <router-link :to="{name: 'bankVirement'}" class="link">
+                    <v-btn color="success" class="w-100" @click="handleCloseNavModal">virement</v-btn>
+                </router-link>
 
+                <router-link :to="{name: 'bankTransactions'}" class="link">
+                    <v-btn color="warning" class="w-100" @click="handleCloseNavModal">historique</v-btn>
+                </router-link>
+            </template>
 
-                    <router-link :to="{name: 'bankVirement'}" class="link">
-                        <v-btn color="success" class="w-100" @click="closeNavModal">virement</v-btn>
-                    </router-link>
-
-
-                    <router-link :to="{name: 'bankTransactions'}" class="link">
-                        <v-btn color="warning" class="w-100" @click="closeNavModal">historique</v-btn>
-                    </router-link>
-                </v-card-text>
-
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="error" @click="logoutBankAccount">deconnexion</v-btn>
-                    <v-btn color="grey darken-1" @click="closeNavModal">fermer</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
+            <template v-slot:actions>
+                <v-btn color="error" @click="logoutBankAccount">deconnexion</v-btn>
+            </template>
+        </ModalComponent>
 
         <div class="d-flex justify-space-between">
             <h3>Account</h3>
 
-            <div id="burger" :class="showNavModal === true ? 'active' : ''" @click="openNavModal">
+            <div id="burger" @click="handleOpenNavModal">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -47,20 +40,19 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
+import ModalComponent from "@/components/ModalComponent.vue";
 
 export default {
     name: "BankAccountView",
-    data: () => ({
-        showNavModal: false,
-    }),
+    components: {ModalComponent},
     methods: {
         ...mapActions('bank', ['logoutBankAccount']),
         ...mapGetters('bank', ['isLoggedBankAccount']),
-        openNavModal() {
-            this.showNavModal = true;
+        handleOpenNavModal() {
+            this.$refs.modalComponent.openNavModal();
         },
-        closeNavModal() {
-            this.showNavModal = false;
+        handleCloseNavModal() {
+            this.$refs.modalComponent.closeNavModal();
         },
     },
     created() {

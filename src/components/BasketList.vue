@@ -50,18 +50,6 @@ export default {
     },
     methods: {
         goToPay() {
-            // const row = document.querySelectorAll('.item-row-cart');
-            // console.log(row);
-            
-
-            // if (row.length !== 0) {
-            //     row.forEach((item) => {
-            //         console.log(item);
-            //     });
-            // }
-
-            // return
-
             const uuid = uuidv4();
 
             this.$router.push({ name: 'shoppay', params: { orderId: uuid } });

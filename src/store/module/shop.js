@@ -29,12 +29,11 @@ export default {
   // actions = fonctions asynchrone pour mettre à jour le state, en faisant appel aux mutations, via la fonction commit()
   actions: {
     async getAllViruses({ commit }) {
-      console.log("récupération des viruses");
       let response = await ShopService.getAllViruses();
       if (response.error === 0) {
         commit("updateViruses", response.data);
       } else {
-        console.log(response.data);
+        console.log("Erreur lors de la récupération des virus");
       }
     },
     addVirusToCart({ commit }, virus) {
