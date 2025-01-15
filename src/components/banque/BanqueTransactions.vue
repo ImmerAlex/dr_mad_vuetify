@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import {mapActions, mapState} from "vuex";
+import {mapState} from "vuex";
 
 export default {
     name: "BanqueTransactions",
@@ -73,7 +73,6 @@ export default {
         ...mapState('bank', ['loggedBankAccount', "accountTransactions"]),
     },
     methods: {
-        ...mapActions('bank', ['getAccountTransactions']),
         formatDateHeure(date) {
             const d = new Date(date);
             const day = String(d.getDate()).padStart(2, '0');
@@ -110,9 +109,6 @@ export default {
             this.modalData = [];
         },
     },
-    created() {
-        this.getAccountTransactions(this.loggedBankAccount.number);
-    }
 };
 </script>
 

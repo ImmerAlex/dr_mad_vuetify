@@ -11,6 +11,9 @@ export default {
         accountError: undefined,
     }),
     mutations: {
+        updateAccountAmount(state, accountAmount){
+          state.accountAmount = accountAmount;
+        },
         updateLoggedBankAccount(state, bankAccount) {
             state.loggedBankAccount = bankAccount
         },
@@ -46,13 +49,26 @@ export default {
                 commit('updateAccountError', -1)
             }
         },
-        async loginToBankAccount({commit}, number) {
+        async getAccountAmount({commit}, number){
+            console.log('get account amount');
+            let response = await BankAccountService.getAccountAmount(number)
+            if (response.error === 0) {
+                commit('updateAccountAmount', response.data)
+                commit('updateAccountError', undefined)
+            } else {
+                console.log(response.data)
+                commit('updateAccountError', -1)
+            }
+        },
+        async loginToBankAccount({commit,dispatch}, number) {
             let response = await BankAccountService.loginToBankAccount(number);
 
             if (response.error === 0) {
                 commit('updateLoggedBankAccount', response.data);
                 commit('updateAccountError', undefined)
                 commit('updateHistoriqueLoggedBankAccount', response.data.number);
+                await dispatch('getAccountTransactions',number);
+                await dispatch('getAccountAmount',number);
 
                 await router.push({name: 'bankSolde'})
             } else {
@@ -72,5 +88,7 @@ export default {
     getters: {
         historiqueLoggedBankAccount: (state) => state.historiqueLoggedBankAccount,
         isLoggedBankAccount: (state) => state.loggedBankAccount !== undefined,
+        accountTransactions: (state) => state.accountTransactions,
+        loggedBankAccount: (state) => state.loggedBankAccount,
     }
 }

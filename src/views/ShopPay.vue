@@ -62,6 +62,33 @@
                 :error-messages="transactionError"
                 ></v-text-field>
             </v-form>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Montant</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="transaction in accountTransactions" :key="transaction.uuid">
+                  <td>{{ formatDate(transaction.date) }}</td>
+                  <td>{{ formatPrice(transaction.amount) }} €</td>
+                  <td>
+                    <v-btn
+                      color="primary"
+                      size="small"
+                      variant="text"
+                      style="margin-right: 5px"
+                      @click="setTransactionId(transaction.uuid)"
+                      >
+                      <v-icon left size="small">mdi-cash-register</v-icon>
+                      Sélectionner
+                    </v-btn>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </v-card-text>
 
           <v-card-actions>
@@ -143,6 +170,9 @@
       ...mapGetters('user', ['isLoggedUser']),
       ...mapGetters('user', ['loggedUser']),
       ...mapGetters('user', ['userOrders']),
+      ...mapGetters('bank', ['loggedBankAccount']),
+      ...mapGetters('bank', ['accountTransactions']),
+
       filteredOrder() {
         if (!this.orderIdInput || !this.userOrders) return null
         return this.userOrders.find(order => 
@@ -152,6 +182,9 @@
       }
     },
     methods: {
+      setTransactionId(id){
+        this.transactionId = id;
+      },
       handlePayment() {
         if (!this.filteredOrder) {
           this.error = 'Aucune commande valide trouvée pour cet UUID'
@@ -170,6 +203,23 @@
         this.transactionError = null
       },
 
+      formatDate(date) {
+        const d = new Date(date);
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        const hours = String(d.getHours()).padStart(2, '0');
+        const minutes = String(d.getMinutes()).padStart(2, '0');
+        return `${day}/${month}/${year} ${hours}:${minutes}`;
+      },
+
+      formatPrice(price) {
+        return Number(price).toLocaleString('fr-FR', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        })
+      },
+
       async confirmPayment() {
         if (!this.transactionId) {
           this.transactionError = 'L\'ID de transaction est requis'
@@ -180,10 +230,11 @@
         this.transactionError = null
 
         try {
-          const response = await OrderService.payOrder({
-            orderId: this.filteredOrder.uuid,
-            transactionId: this.transactionId
-          })
+          const response = await OrderService.payOrder(
+            this.loggedUser._id,
+            this.filteredOrder.uuid,
+            this.transactionId
+          )
 
           if (response.error === 0) {
             this.snackbarColor = 'success'
