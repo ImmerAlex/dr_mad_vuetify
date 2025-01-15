@@ -41,7 +41,7 @@
             </v-card-text>
         </v-card>
 
-        <ModalComponent ref="modalComponent">
+        <ModalComponent v-if="!displayErrorModal" ref="modalComponent">
             <template v-slot:header>
                 Confirmation de paiement
             </template>
@@ -95,6 +95,19 @@
                 </v-btn>
             </template>
         </ModalComponent>
+
+        <ModalComponent v-if="displayErrorModal" ref="modalComponent">
+            <template v-slot:header>
+                <p v-if="orderError.error === -1">Erreur</p>
+                <p v-else>Succès</p>
+            </template>
+
+            <template v-slot:content>
+                <p v-if="orderError.error === -1" class="alert alert-danger">{{ orderError.message }}</p>
+                <p v-else class="alert alert-success">{{ orderError.message }}</p>
+            </template>
+        </ModalComponent>
+
     </v-container>
 </template>
 
@@ -119,9 +132,10 @@ export default {
             {text: 'Montant', value: 'amount'},
             {text: 'Actions', value: 'actions', sortable: false},
         ],
+        displayErrorModal: false,
     }),
     computed: {
-        ...mapGetters('user', ['isLoggedUser', 'userOrders']),
+        ...mapGetters('user', ['isLoggedUser', 'userOrders', 'orderError']),
         ...mapGetters('bank', ['accountTransactions']),
 
         order() {
@@ -154,8 +168,15 @@ export default {
                 maximumFractionDigits: 2
             });
         },
-        confirmPayment() {
-            // Implementation of payment confirmation
+        async confirmPayment() {
+            await this.makePayment()
+                .then(() => {
+                    this.displayErrorModal = true;
+
+                    setTimeout(() => {
+                        this.displayErrorModal = false;
+                    }, 2500);
+                });
         },
     },
     created() {

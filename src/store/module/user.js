@@ -18,27 +18,27 @@ export default {
         CLEAR_USER(state) {
             state.loggedUser = null;
         },
-        SET_ORDER_STATUS_BY_ID(state, {id, status}) {
-            if (state.userOrders) {
-                const order = state.userOrders.find(o => o.uuid === id)
-                if (order) {
-                    order.status = status
+        UPDATE_ORDER_STATUS(state, order, status) {
+            state.userOrders = state.userOrders.map(o => {
+                if (o.uuid === order.uuid) {
+                    o.status = status;
                 }
-            }
+                return o;
+            });
         },
         SET_ORDER_ERROR(state, error) {
             state.orderError = error;
         },
     },
     actions: {
-        async makePayment({commit}, {userId, orderUUID, transId, accountNumber}) {
-            let response = await OrdersService.payOrder(userId, orderUUID, transId, accountNumber);
+        async makePayment({commit}) {
+            const response = await OrdersService.payOrder();
 
             if (response.error === 0) {
-                commit('SET_ORDER_STATUS_BY_ID', {id: response.data.uuid, status: 'finalized'});
-                commit('SET_ORDER_ERROR', {error: 0, message: "Paiement effectué"});
+                commit('UPDATE_ORDER_STATUS', response.data, 'finalized');
+                commit('SET_ORDER_ERROR', {error: response.error, message: 'Le paiement a été effectué avec succès'});
             } else {
-                commit('SET_ORDER_ERROR', {error: -1, message: response.data});
+                commit('SET_ORDER_ERROR', {error: response.error, message: response.data});
             }
         },
         async fetchOrders({commit}, data) {
@@ -69,5 +69,6 @@ export default {
         isLoggedUser: (state) => state.loggedUser !== null,
         loggedUser: (state) => state.loggedUser,
         userOrders: (state) => state.userOrders,
+        orderError: (state) => state.orderError,
     },
 };
