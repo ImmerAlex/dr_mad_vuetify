@@ -8,6 +8,7 @@
                 <th>name</th>
                 <th>price</th>
                 <th>quantity</th>
+                <th>action</th>
             </tr>
             </thead>
 
@@ -17,9 +18,14 @@
                 <td>{{ item.name }}</td>
                 <td>{{ item.price }}</td>
                 <td>{{ item.quantity }}</td>
+                <td>
+                    <v-btn @click="$emit('removeCartItem', index)" color="error">Remove</v-btn>
+                </td>
             </tr>
             </tbody>
         </table>
+
+        <v-btn @click="$emit('suppressCart')" color="error" :disabled="cart.length === 0">Vider le panier</v-btn>
 
         <div class="d-flex align-items-center justify-content-between bg-secondary"
              style="color: white; padding: 10px 10px 0 10px; border-radius: 0 0 10px 10px">
@@ -27,7 +33,7 @@
             <h4>{{ total }}</h4>
         </div>
 
-        <v-btn @click="goToPay" color="error">Payer</v-btn>
+        <v-btn @click="goToPay" color="success" :disabled="cart.length === 0">Payer</v-btn>
     </div>
 </template>
 

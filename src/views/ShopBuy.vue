@@ -1,11 +1,11 @@
 <template>
-  <div class="containerBuy">
+    <div class="containerBuy">
 
-    <ItemsList class="itemList" :items="viruses"/>
+        <ItemsList :items="viruses" class="itemList"/>
 
-    <BasketList class="basketList" :cart="cart"/>
+        <BasketList @removeCartItem="removeCartItem" @suppressCart="suppressCart" :cart="cart" class="basketList"/>
 
-  </div>
+    </div>
 </template>
 
 <script>
@@ -14,17 +14,23 @@ import ItemsList from "@/components/ItemsList.vue";
 import BasketList from "@/components/BasketList.vue";
 
 export default {
-  name: "ShopBuy",
-  components: {ItemsList, BasketList},
-  computed: {
-    ...mapState("shop", ["viruses", "cart"]),
-  },
-  methods: {
-    ...mapActions("shop", ["getAllViruses"]),
-  },
-  mounted() {
-    this.getAllViruses();
-  },
+    name: "ShopBuy",
+    components: {ItemsList, BasketList},
+    computed: {
+        ...mapState("shop", ["viruses", "cart"]),
+    },
+    methods: {
+        ...mapActions("shop", ["getAllViruses"]),
+        removeCartItem(index) {
+            this.$store.commit("shop/removeCartItem", index);
+        },
+        suppressCart() {
+            this.$store.commit("shop/suppressCart");
+        },
+    },
+    mounted() {
+        this.getAllViruses();
+    },
 };
 </script>
 

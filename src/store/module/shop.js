@@ -25,6 +25,12 @@ export default {
         state.cart.push({ id: virus._id, name: virus.name, price: virus.price, quantity: 1 });
       }
     },
+    removeCartItem(state, index) {
+        state.cart.splice(index, 1);
+    },
+    suppressCart(state) {
+      state.cart = [];
+    }
   },
   // actions = fonctions asynchrone pour mettre à jour le state, en faisant appel aux mutations, via la fonction commit()
   actions: {
