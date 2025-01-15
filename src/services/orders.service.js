@@ -63,6 +63,8 @@ async function payOrder(userId, orderUuid, transactionUuid) {
         }
     }
 
+    // TODO: Vérifier que le montant de la transaction est égal au montant de la commande
+
     return {
         error: 0,
         status: 200,
