@@ -4,36 +4,36 @@
 
         <table class="table table-striped">
             <thead>
-                <tr>
-                    <th>name</th>
-                    <th>price</th>
-                    <th>quantity</th>
-                </tr>
+            <tr>
+                <th>name</th>
+                <th>price</th>
+                <th>quantity</th>
+            </tr>
             </thead>
 
             <tbody>
-                <tr v-for="(item, index) in cart" :key="index" class="item-row-cart">
-                    <td style="display: none;">{{item.id}}</td>
-                    <td>{{item.name}}</td>
-                    <td>{{item.price}}</td>
-                    <td>{{item.quantity}}</td>
-                </tr>
+            <tr v-for="(item, index) in cart" :key="index" class="item-row-cart">
+                <td style="display: none;">{{ item.id }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.price }}</td>
+                <td>{{ item.quantity }}</td>
+            </tr>
             </tbody>
         </table>
 
-        <div class="d-flex align-items-center justify-content-between bg-secondary" style="color: white; padding: 10px 10px 0 10px; border-radius: 0 0 10px 10px">
+        <div class="d-flex align-items-center justify-content-between bg-secondary"
+             style="color: white; padding: 10px 10px 0 10px; border-radius: 0 0 10px 10px">
             <h4>Total</h4>
             <h4>{{ total }}</h4>
         </div>
 
-        <form @submit.prevent="goToPay" class="btn btn-danger">
-            <button type="submit">Payer</button>
-        </form>
+        <v-btn @click="goToPay" color="error">Payer</v-btn>
     </div>
 </template>
 
 <script>
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
+import {mapActions, mapState} from "vuex";
 
 export default {
     name: "BasketList",
@@ -44,15 +44,42 @@ export default {
         }
     },
     computed: {
+        ...mapState('user', ['loggedUser', 'userOrders']),
+        ...mapState('shop', ['viruses']),
         total() {
             return this.cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
         }
     },
     methods: {
-        goToPay() {
+        ...mapActions('user', ['fetchOrders']),
+        async goToPay() {
+            console.log('goToPay');
             const uuid = uuidv4();
 
-            this.$router.push({ name: 'shoppay', params: { orderId: uuid } });
+            await this.fetchOrders(this.loggedUser._id);
+
+            const virusesOrder = this.cart.map(item => {
+                const virus = this.viruses.find(virus => virus._id === item.id);
+                return {
+                    item: virus,
+                    amount: item.quantity,
+                    _id: uuidv4(),
+                }
+            });
+
+            await this.$store.dispatch('user/addOrder', {
+                date: {
+                    $date: new Date().toISOString(),
+                },
+                items: virusesOrder,
+                status: 'pending',
+                total: this.total,
+                uuid: uuid,
+                _id: uuidv4(),
+            })
+                .then(() => {
+                    this.$router.push({name: 'shoppay', params: {orderId: uuid}});
+                });
         },
     }
 }

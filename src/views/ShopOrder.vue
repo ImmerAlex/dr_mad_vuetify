@@ -104,9 +104,6 @@ export default {
     },
 
     created() {
-        if (!this.isLoggedUser) {
-            this.$router.push({name: 'shoplogin'})
-        }
         this.fetchOrders();
     },
 

@@ -114,7 +114,7 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from 'vuex'
+import {mapGetters} from 'vuex'
 import ModalComponent from "@/components/ModalComponent.vue";
 
 export default {
@@ -147,7 +147,6 @@ export default {
         }
     },
     methods: {
-        ...mapActions('user', ['makePayment']),
         handleOpenNavModal() {
             this.$refs.modalComponent.openNavModal();
         },
