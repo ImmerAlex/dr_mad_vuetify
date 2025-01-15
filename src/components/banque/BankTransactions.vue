@@ -26,34 +26,67 @@
             </div>
         </div>
 
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>select</th>
-                <th>montant</th>
-                <th>date</th>
-                <th>action</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="(transaction, index) in filterTransactions()" :key="index">
-                <td>
-                    <input :id="transaction._id" type="checkbox" v-model="selectedTransactions"
-                           :value="transaction._id">
-                </td>
+        <v-data-table
+            :headers="headers"
+            :items="filterTransactions()"
+            :items-per-page="5"
+            class="elevation-1"
+            no-data-text="Aucune transaction disponible">
 
-                <td v-if="transaction.amount > 0" class="bg-success text-white">{{ transaction.amount }}</td>
-                <td v-else class="bg-danger text-white">{{ formatNumber(transaction.amount, 'fr-FR', 'EUR') }}</td>
+            <template v-slot:item="{ item }">
+                <tr>
+                    <td>
+                        <input :id="item._id" type="checkbox" v-model="selectedTransactions" :value="item._id">
+                    </td>
 
-                <td>{{ formatDateHeure(transaction.date) }}</td>
-                <td>
-                    <button class="btn btn-primary" @click="displayDetail(transaction._id)">Detail</button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                    <td v-if="item.amount >= 0" class="bg-success text-white">{{ item.amount }}</td>
+                    <td v-else class="bg-danger text-white">{{ formatNumber(item.amount, 'fr-FR', 'EUR') }}</td>
 
-        <button class="btn btn-success" @click="displayDetails">Details selected</button>
+                    <td>{{ formatDateHeure(item.date) }}</td>
+
+                    <td v-if="item.amount >= 0">D</td>
+                    <td v-else>S</td>
+
+                    <td>
+                        <button class="btn btn-primary" @click="displayDetail(item._id)">Detail</button>
+                    </td>
+                </tr>
+            </template>
+        </v-data-table>
+
+<!--        <table class="table table-striped">-->
+<!--            <thead>-->
+<!--            <tr>-->
+<!--                <th>select</th>-->
+<!--                <th>montant</th>-->
+<!--                <th>date</th>-->
+<!--                <th>S/D</th>-->
+<!--                <th>action</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--            <tr v-for="(transaction, index) in filterTransactions()" :key="index">-->
+<!--                <td>-->
+<!--                    <input :id="transaction._id" type="checkbox" v-model="selectedTransactions"-->
+<!--                           :value="transaction._id">-->
+<!--                </td>-->
+
+<!--                <td v-if="transaction.amount >= 0" class="bg-success text-white">{{ transaction.amount }}</td>-->
+<!--                <td v-else class="bg-danger text-white">{{ formatNumber(transaction.amount, 'fr-FR', 'EUR') }}</td>-->
+
+<!--                <td>{{ formatDateHeure(transaction.date) }}</td>-->
+
+<!--                <td v-if="transaction.amount >= 0">D</td>-->
+<!--                <td v-else>S</td>-->
+
+<!--                <td>-->
+<!--                    <button class="btn btn-primary" @click="displayDetail(transaction._id)">Detail</button>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </table>-->
+
+        <button class="btn btn-success mt-2" @click="displayDetails" :disabled="selectedTransactions.length === 0">Details selected</button>
     </div>
 </template>
 
@@ -67,7 +100,14 @@ export default {
         dateFin: '',
         modal: false,
         modalData: [],
-        selectedTransactions: []
+        selectedTransactions: [],
+        headers: [
+            {text: 'Select', value: 'select', sortable: false},
+            {text: 'Montant', value: 'amount'},
+            {text: 'Date', value: 'date'},
+            {text: 'S/D', value: 'sd'},
+            {text: 'Action', value: 'action', sortable: false},
+        ],
     }),
     computed: {
         ...mapState('bank', ['loggedBankAccount', "accountTransactions"]),
