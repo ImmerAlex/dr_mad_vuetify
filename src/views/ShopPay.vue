@@ -134,7 +134,7 @@
 
 <script>
   import OrderService from '@/services/orders.service'
-  import { mapGetters } from 'vuex'
+  import { mapActions, mapState, mapGetters } from 'vuex'
 
   export default {
     name: 'ShopPay',
@@ -172,6 +172,7 @@
       ...mapGetters('user', ['userOrders']),
       ...mapGetters('bank', ['loggedBankAccount']),
       ...mapGetters('bank', ['accountTransactions']),
+      ...mapState('user', ['orderError']),
 
       filteredOrder() {
         if (!this.orderIdInput || !this.userOrders) return null
@@ -182,6 +183,7 @@
       }
     },
     methods: {
+      ...mapActions('user', ['makePayment']),
       setTransactionId(id){
         this.transactionId = id;
       },
@@ -225,40 +227,41 @@
           this.transactionError = 'L\'ID de transaction est requis'
           return
         }
+        await this.makePayment({
+          userId: this.loggedUser._id,
+          orderUUID: this.filteredOrder.uuid,
+          transId: this.transactionId,
+          accountNumber: this.accountNumber,
+        })
 
         this.loading = true
+        if (orderError.error === -1)
         this.transactionError = null
 
-        try {
-          const response = await OrderService.payOrder(
-            this.loggedUser._id,
-            this.filteredOrder.uuid,
-            this.transactionId
-          )
 
-          if (response.error === 0) {
-            this.snackbarColor = 'success'
-            this.snackbarText = 'Paiement effectué avec succès'
-            this.snackbar = true
-            this.closePaymentModal()
+        if (response.error === 0) {
+        //    this.snackbarColor = 'success'
+        //    this.snackbarText = 'Paiement effectué avec succès'
+        //    this.snackbar = true
+        //    this.closePaymentModal()
 
-            setTimeout(() => {
-              this.$router.push({ name: 'shoporders' })
-            }, 1000)
-          } else {
-            this.transactionError = response.data
-            this.snackbarColor = 'error'
-            this.snackbarText = response.data
-            this.snackbar = true
-          }
-        } catch (error) {
-          this.transactionError = 'Une erreur est survenue lors du paiement'
-          this.snackbarColor = 'error'
-          this.snackbarText = 'Une erreur est survenue lors du paiement'
-          this.snackbar = true
-          console.error('Erreur lors du paiement:', error)
-        } finally {
-          this.loading = false
+        //    setTimeout(() => {
+        //      this.$router.push({ name: 'shoporders' })
+        //    }, 1000)
+        //  } else {
+        //    this.transactionError = response.data
+        //    this.snackbarColor = 'error'
+        //    this.snackbarText = response.data
+        //    this.snackbar = true
+        //  }
+        //} catch (error) {
+        //  this.transactionError = 'Une erreur est survenue lors du paiement'
+        //  this.snackbarColor = 'error'
+        //  this.snackbarText = 'Une erreur est survenue lors du paiement'
+        //  this.snackbar = true
+        //  console.error('Erreur lors du paiement:', error)
+        //} finally {
+        //  this.loading = false
         }
       }  
     },
