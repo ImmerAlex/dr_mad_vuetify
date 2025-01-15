@@ -17,10 +17,12 @@
                             class="d-flex align-center"
                             exact
                         >
-                            <v-list-item-icon>
-                                <v-icon>{{ link.icon }}</v-icon>
-                            </v-list-item-icon>
-                            <v-list-item-title>{{ link.title }}</v-list-item-title>
+                            <slot :link="link" name="link">
+                                <v-list-item-icon>
+                                    <v-icon>{{ link.icon }}</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-title>{{ link.title }}</v-list-item-title>
+                            </slot>
                         </v-list-item>
 
                         <v-list-item
@@ -30,10 +32,12 @@
                             class="d-flex align-center"
                             @click="handleAction(link.action)"
                         >
-                            <v-list-item-icon>
-                                <v-icon>{{ link.icon }}</v-icon>
-                            </v-list-item-icon>
-                            <v-list-item-title>{{ link.title }}</v-list-item-title>
+                            <slot :link="link" name="link">
+                                <v-list-item-icon>
+                                    <v-icon>{{ link.icon }}</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-title>{{ link.title }}</v-list-item-title>
+                            </slot>
                         </v-list-item>
                     </template>
                 </v-list-item-group>
@@ -43,47 +47,20 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from "vuex";
+import {mapActions} from "vuex";
 
 export default {
     name: "NavBar",
+    props: {
+        links: {
+            type: Array,
+            required: true,
+        }
+    },
     data: () => ({
         drawer: false,
         selectedItem: null,
     }),
-    computed: {
-        ...mapGetters('user', ['isLoggedUser']),
-        ...mapGetters('bank', ['isLoggedBankAccount']),
-        links() {
-            const links = [];
-
-            if (!this.isLoggedUser) {
-                if (!this.isLoggedBankAccount) {
-                    links.push({title: "Bank", icon: "mdi-bank", to: {name: 'bankLogin'}});
-                } else {
-                    links.push({title: "Bank", icon: "mdi-bank", to: {name: 'bankSolde'}});
-                }
-
-                links.push({title: "Login", icon: "mdi-login", to: {name: 'shoplogin'}});
-            } else {
-                if (!this.isLoggedBankAccount) {
-                    links.push({title: "Bank", icon: "mdi-bank", to: {name: 'bankLogin'}});
-                } else {
-                    links.push({title: "Bank", icon: "mdi-bank", to: {name: 'bankSolde'}});
-                }
-
-                links.push({title: "Home", icon: "mdi-home", to: {name: 'home'}});
-                links.push({title: "Shop", icon: "mdi-account", to: {name: 'shophome'}});
-                links.push({title: "Buy", icon: "mdi-account", to: {name: 'shopbuy'}});
-                links.push({title: "Pay", icon: "mdi-account", to: {name: 'shoppay'}});
-                links.push({title: "Order", icon: "mdi-account", to: {name: 'shoporders'}});
-                links.push({title: "Viruses", icon: "mdi-virus", to: {name: 'shopitems'}});
-                links.push({title: "Logout", icon: "mdi-logout", action: 'logout'});
-            }
-
-            return links;
-        },
-    },
     methods: {
         ...mapActions('user', ['logout']),
         handleAction(action) {
