@@ -63,7 +63,13 @@ async function payOrder(userId, orderUuid, transactionUuid) {
         }
     }
 
-    // TODO: Vérifier que le montant de la transaction est égal au montant de la commande
+    if (order.data.total !== transaction.data.amount) {
+        return {
+            error: -1,
+            status: 400,
+            data: 'Le montant de la transaction ne correspond pas au montant de la commande'
+        }
+    }
 
     return {
         error: 0,
