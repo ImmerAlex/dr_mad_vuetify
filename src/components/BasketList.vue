@@ -19,13 +19,13 @@
                 <td>{{ item.price }}</td>
                 <td>{{ item.quantity }}</td>
                 <td>
-                    <v-btn @click="$emit('removeCartItem', index)" color="error">Remove</v-btn>
+                    <v-btn color="error" @click="$emit('removeCartItem', index)">Remove</v-btn>
                 </td>
             </tr>
             </tbody>
         </table>
 
-        <v-btn @click="$emit('suppressCart')" color="error" :disabled="cart.length === 0">Vider le panier</v-btn>
+        <v-btn :disabled="cart.length === 0" color="error" @click="$emit('suppressCart')">Vider le panier</v-btn>
 
         <div class="d-flex align-items-center justify-content-between bg-secondary"
              style="color: white; padding: 10px 10px 0 10px; border-radius: 0 0 10px 10px">
@@ -33,7 +33,7 @@
             <h4>{{ total }}</h4>
         </div>
 
-        <v-btn @click="goToPay" color="success" :disabled="cart.length === 0">Payer</v-btn>
+        <v-btn :disabled="cart.length === 0" color="success" @click="goToPay">Payer</v-btn>
     </div>
 </template>
 
@@ -57,7 +57,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions('user', ['fetchOrders']),
+        ...mapActions('user', ['fetchOrders', 'addOrder']),
         async goToPay() {
             console.log('goToPay');
             const uuid = uuidv4();
@@ -73,7 +73,7 @@ export default {
                 }
             });
 
-            await this.$store.dispatch('user/addOrder', {
+            await this.addOrder({
                 date: {
                     $date: new Date().toISOString(),
                 },
@@ -85,7 +85,7 @@ export default {
             })
                 .then(() => {
                     this.$router.push({name: 'shoppay', params: {orderId: uuid}});
-                });
+                })
         },
     }
 }
