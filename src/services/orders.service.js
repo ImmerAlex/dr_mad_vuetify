@@ -8,7 +8,7 @@ async function getUserOrderByUuidByLocalSource(userId, orderUuid) {
     return LocalSource.getUserOrderByUuid(userId, orderUuid)
 }
 
-async function getTransactionFromNotLocalSource(transactionUuid,transactions) {
+function getTransactionFromNotLocalSource(transactionUuid, transactions) {
     return transactions.find(t => t.uuid === transactionUuid);
 }
 
@@ -53,7 +53,8 @@ async function payOrder(userId, orderUuid, transactionUuid, transactions) {
         }
     }
 
-    const transaction = getTransactionFromNotLocalSource(transactionUuid,transactions);
+    const transaction = getTransactionFromNotLocalSource(transactionUuid, transactions);
+    console.log(transaction)
 
     if (transaction.error === -1) {
         return {
@@ -63,12 +64,16 @@ async function payOrder(userId, orderUuid, transactionUuid, transactions) {
         }
     }
 
-    if (order.data.total !== transaction.data.amount) {
-        return {
-            error: -1,
-            status: 400,
-            data: 'Le montant de la transaction ne correspond pas au montant de la commande'
-        }
+    if (transaction.destination !== 'FRSHOP4578901234567890-0000999') return {
+        error: -1,
+        status: 400,
+        data: 'Le compte de destination de la transaction est incorrect'
+    }
+
+    if (order.data.total !== -(transaction.amount)) return {
+        error: -1,
+        status: 400,
+        data: 'Le montant de la transaction ne correspond pas au montant de la commande'
     }
 
     return {
