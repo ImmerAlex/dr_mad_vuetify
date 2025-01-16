@@ -144,7 +144,7 @@ export default {
     }),
     computed: {
         ...mapGetters('user', ['isLoggedUser', 'userOrders', 'orderError', 'loggedUser']),
-        ...mapGetters('bank', ['accountTransactions']),
+        ...mapGetters('bank', ['accountTransactions','transactions']),
 
         order() {
             return this.userOrders?.find(order =>
@@ -182,7 +182,8 @@ export default {
                 await this.$store.dispatch('user/makePayment', {
                     userId: this.loggedUser._id,
                     orderUuid: this.order.uuid,
-                    transactionUuid: this.transactionUuid
+                    transactionUuid: this.transactionUuid,
+                    transactions: this.accountTransactions
                 });
 
                 this.displayErrorModal = true;

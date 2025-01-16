@@ -31,6 +31,10 @@ function getAllViruses() {
     return {error: 0, data: items}
 }
 
+function getAllTransactions(){
+    return {error: 0, data: transactions}
+}
+
 function getAccountAmount(number) {
     if (!number) return {error: 1, status: 404, data: 'aucun numéro de compte bancaire fourni'}
     let account = bankaccounts.find(a => a.number === number)
@@ -44,6 +48,18 @@ function getAccountTransactions(number) {
     let account = bankaccounts.find(a => a.number === number)
 
     if (!account) return {error: 1, status: 404, data: 'numéro de compte bancaire incorrect'}
+
+    let trans = transactions.filter(t => t.account === account._id)
+
+    return {error: 0, status: 200, data: trans}
+}
+
+function getTransactionFromId(id) {
+    if (!id) return {error: 1, status: 404, data: 'aucun id bancaire fourni'}
+
+    let account = bankaccounts.find(a => a._id === id)
+
+    if (!account) return {error: 1, status: 404, data: 'id bancaire incorrect'}
 
     let trans = transactions.filter(t => t.account === account._id)
 
@@ -109,6 +125,7 @@ function getUserOrderByUuid(userId, orderUuid) {
 }
 
 function getTransaction(transactionUuid) {
+    // TODO: get from state
     if (!transactionUuid) return {error: -1, status: 404, data: 'aucun numéro de transaction fourni'}
 
     let transaction = transactions.find(t => t.uuid === transactionUuid)
@@ -127,4 +144,6 @@ export default {
     loginToBankAccount,
     getUserOrderByUuid,
     getTransaction,
+    getTransactionFromId,
+    getAllTransactions
 }

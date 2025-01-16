@@ -8,8 +8,8 @@ async function getUserOrderByUuidByLocalSource(userId, orderUuid) {
     return LocalSource.getUserOrderByUuid(userId, orderUuid)
 }
 
-async function getTransactionFromLocalSource(transactionUuid) {
-    return LocalSource.getTransaction(transactionUuid)
+async function getTransactionFromNotLocalSource(transactionUuid,transactions) {
+    return transactions.find(t => t.uuid === transactionUuid);
 }
 
 async function getUserOrders(userId) {
@@ -42,7 +42,7 @@ async function getOrderByUuid(userId, orderUuid) {
     return response
 }
 
-async function payOrder(userId, orderUuid, transactionUuid) {
+async function payOrder(userId, orderUuid, transactionUuid, transactions) {
     const order = await getOrderByUuid(userId, orderUuid);
 
     if (order.error === -1) {
@@ -53,7 +53,7 @@ async function payOrder(userId, orderUuid, transactionUuid) {
         }
     }
 
-    const transaction = await getTransactionFromLocalSource(transactionUuid);
+    const transaction = getTransactionFromNotLocalSource(transactionUuid,transactions);
 
     if (transaction.error === -1) {
         return {

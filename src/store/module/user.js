@@ -35,8 +35,8 @@ export default {
         async addOrder({commit}, data) {
             commit('UPDATE_ORDERS', data);
         },
-        async makePayment({commit}, {userId, orderUuid, transactionUuid}) {
-            const response = await OrdersService.payOrder(userId, orderUuid, transactionUuid);
+        async makePayment({commit}, {userId, orderUuid, transactionUuid, transactions}) {
+            const response = await OrdersService.payOrder(userId, orderUuid, transactionUuid, transactions);
 
             if (response.error === 0) {
                 commit('UPDATE_ORDERS', response.data);
