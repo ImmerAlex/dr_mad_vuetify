@@ -29,7 +29,11 @@
                 class="form-control" 
                 name="destAccount"
                 placeholder="Compte destinataire" 
-                type="text"/>
+                type="text"
+                list="destAccountDataList"/>
+                <datalist id="destAccountDataList">
+                    <option value="FRSHOP4578901234567890-0000999" />
+                </datalist>
             </div>
 
             <v-btn color="primary" 

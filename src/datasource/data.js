@@ -1,4 +1,4 @@
-let items = [
+ let items = [
     {
         "_id": "6476f0e1c7e21b2b33a35d78",
         "name": "variole",

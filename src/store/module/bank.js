@@ -111,8 +111,7 @@ export default {
                     $date: new Date().toISOString(),
                 },
                 amount: -(data.amount),
-                account: data.idAccount
-                //TODO: destination
+                account: data.idAccount,
             };
 
             // Mettre à jour le state directement
@@ -136,8 +135,10 @@ export default {
         },
 
         async createPayment({ commit, state, dispatch }, data) {
+            console.log(data)
             // Vérifier si le compte destinataire existe
             let destAccount = await BankAccountService.loginToBankAccount(data.destNumber);
+
             if (destAccount.error !== 0) {
                 commit('updateAccountError', {
                     error: -1,
@@ -163,7 +164,8 @@ export default {
                     $date: new Date().toISOString(),
                 },
                 amount: -(data.amount),
-                account: data.idAccount
+                account: data.idAccount,
+                destination: data.destNumber,
             };
 
             // Créer le dépôt sur le compte destinataire
@@ -173,7 +175,7 @@ export default {
                     $date: new Date().toISOString(),
                 },
                 amount: data.amount,
-                account: destAccount.data._id
+                account: destAccount.data._id,
             };
 
             // Mettre à jour le state avec les deux transactions
