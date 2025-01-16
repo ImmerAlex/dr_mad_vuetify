@@ -51,9 +51,9 @@ export default {
             let response = await BankAccountService.getAccountAmount(number)
             if (response.error === 0) {
                 commit('updateAccountAmount', response.data)
-                commit('updateAccountError', undefined)
+                commit('updateAccountError', {error: 0, message: 'Solde récupéré'})
             } else {
-                commit('updateAccountError', -1)
+                commit('updateAccountError', {error: -1, message: response.data})
             }
         },
         async loginToBankAccount({commit,dispatch}, number) {

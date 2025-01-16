@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="showNavModal" max-width="500px">
+    <v-dialog v-model="showNavModal" :persistent="persistent" max-width="500px">
         <v-card>
             <v-card-title class="text-h5">
                 <slot name="header" />
@@ -12,8 +12,6 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <slot name="actions" />
-
-                <v-btn color="grey darken-1" class="text-white" @click="closeNavModal">close</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -22,6 +20,12 @@
 <script>
 export default {
     name: "ModalComponent",
+    props: {
+        persistent: {
+            type: Boolean,
+            default: false
+        }
+    },
     data: () => ({
         showNavModal: false,
     }),

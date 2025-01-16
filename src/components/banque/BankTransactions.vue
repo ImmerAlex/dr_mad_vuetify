@@ -1,19 +1,26 @@
 <template>
     <div>
-        <!--        {{ accountTransactions }}-->
+        <ModalComponent ref="modalComponent" :persistent="true">
+            <template v-slot:header>
+                <h2 v-if="selectedTransactions.length < 1">Detail</h2>
+                <h2 v-else>Details</h2>
+            </template>
 
-        <div v-if="modal" id="modal" @click="hideModal">
-            <div id="modal-content">
-                <h2 class="mb-4">Detail(s)</h2>
-
-                <div v-for="(transaction, index) in modalData" :key="index" class="d-flex align-center gap-2">
-                    <p v-if="transaction.amount > 0" class="text-success">
-                        {{ formatNumber(transaction.amount, 'fr-FR', 'EUR') }}</p>
-                    <p v-else class="text-danger">{{ formatNumber(transaction.amount, 'fr-FR', 'EUR') }}</p>
-                    <p>: {{ transaction.uuid }}</p>
+            <template v-slot:content>
+                <div>
+                    <div v-for="(transaction, index) in modalData" :key="index" class="d-flex align-center gap-2">
+                        <p v-if="transaction.amount > 0" class="text-success">
+                            {{ formatNumber(transaction.amount, 'fr-FR', 'EUR') }}</p>
+                        <p v-else class="text-danger">{{ formatNumber(transaction.amount, 'fr-FR', 'EUR') }}</p>
+                        <p>: {{ transaction.uuid }}</p>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </template>
+
+            <template v-slot:actions>
+                <v-btn class="grey darken-1" @click="handleCloseModal">Close</v-btn>
+            </template>
+        </ModalComponent>
 
         <div id="filtre" class="d-flex justify-content-center align-items-center gap-3">
             <div class="form-group">
@@ -36,7 +43,7 @@
             <template v-slot:item="{ item }">
                 <tr>
                     <td>
-                        <input :id="item._id" type="checkbox" v-model="selectedTransactions" :value="item._id">
+                        <input :id="item._id" v-model="selectedTransactions" :value="item._id" type="checkbox">
                     </td>
 
                     <td v-if="item.amount >= 0" class="bg-success text-white">{{ item.amount }}</td>
@@ -48,53 +55,25 @@
                     <td v-else>S</td>
 
                     <td>
-                        <button class="btn btn-primary" @click="displayDetail(item._id)">Detail</button>
+                        <v-btn color="primary" @click="displayDetail(item._id)">Detail</v-btn>
                     </td>
                 </tr>
             </template>
         </v-data-table>
 
-<!--        <table class="table table-striped">-->
-<!--            <thead>-->
-<!--            <tr>-->
-<!--                <th>select</th>-->
-<!--                <th>montant</th>-->
-<!--                <th>date</th>-->
-<!--                <th>S/D</th>-->
-<!--                <th>action</th>-->
-<!--            </tr>-->
-<!--            </thead>-->
-<!--            <tbody>-->
-<!--            <tr v-for="(transaction, index) in filterTransactions()" :key="index">-->
-<!--                <td>-->
-<!--                    <input :id="transaction._id" type="checkbox" v-model="selectedTransactions"-->
-<!--                           :value="transaction._id">-->
-<!--                </td>-->
-
-<!--                <td v-if="transaction.amount >= 0" class="bg-success text-white">{{ transaction.amount }}</td>-->
-<!--                <td v-else class="bg-danger text-white">{{ formatNumber(transaction.amount, 'fr-FR', 'EUR') }}</td>-->
-
-<!--                <td>{{ formatDateHeure(transaction.date) }}</td>-->
-
-<!--                <td v-if="transaction.amount >= 0">D</td>-->
-<!--                <td v-else>S</td>-->
-
-<!--                <td>-->
-<!--                    <button class="btn btn-primary" @click="displayDetail(transaction._id)">Detail</button>-->
-<!--                </td>-->
-<!--            </tr>-->
-<!--            </tbody>-->
-<!--        </table>-->
-
-        <button class="btn btn-success mt-2" @click="displayDetails" :disabled="selectedTransactions.length === 0">Details selected</button>
+        <v-btn :disabled="selectedTransactions.length === 0" color="success" class="mt-2" @click="displayDetails">
+            Details selected
+        </v-btn>
     </div>
 </template>
 
 <script>
 import {mapState} from "vuex";
+import ModalComponent from "@/components/ModalComponent.vue";
 
 export default {
     name: "BanqueTransactions",
+    components: {ModalComponent},
     data: () => ({
         dateDebut: '',
         dateFin: '',
@@ -113,6 +92,13 @@ export default {
         ...mapState('bank', ['loggedBankAccount', "accountTransactions"]),
     },
     methods: {
+        handleOpenNavModal() {
+            this.$refs.modalComponent.openNavModal();
+        },
+        handleCloseModal() {
+            this.modalData = [];
+            this.$refs.modalComponent.closeNavModal();
+        },
         formatDateHeure(date) {
             const d = new Date(date);
             const day = String(d.getDate()).padStart(2, '0');
@@ -136,46 +122,15 @@ export default {
         },
         displayDetail(id) {
             this.modalData.push(this.accountTransactions.find(transaction => transaction._id === id));
-            this.modal = true;
+            this.handleOpenNavModal();
         },
         displayDetails() {
             this.modalData = this.accountTransactions.filter(transaction =>
                 this.selectedTransactions.includes(transaction._id)
             );
-            this.modal = true;
-        },
-        hideModal() {
-            this.modal = false;
-            this.modalData = [];
+
+            this.handleOpenNavModal()
         },
     },
 };
 </script>
-
-<style scoped>
-.table td,
-.table th {
-    vertical-align: middle;
-    text-align: center;
-}
-
-#modal {
-    display: grid;
-    place-items: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-}
-
-#modal-content {
-    position: relative;
-    padding: 15px 30px 5px 30px;
-    border-radius: 5px;
-    background-color: white;
-}
-
-</style>

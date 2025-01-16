@@ -95,6 +95,8 @@
                 >
                     Confirmer le paiement
                 </v-btn>
+
+                <v-btn class="grey darken-1" @click="handleCloseModal">Close</v-btn>
             </template>
         </ModalComponent>
 
@@ -107,6 +109,10 @@
             <template v-slot:content>
                 <p v-if="orderError.error === -1" class="alert alert-danger">{{ orderError.message }}</p>
                 <p v-else class="alert alert-success">{{ orderError.message }}</p>
+            </template>
+
+            <template v-slot:actions>
+                <v-btn class="grey darken-1" @click="handleCloseModal">Close</v-btn>
             </template>
         </ModalComponent>
 
@@ -149,6 +155,9 @@ export default {
     methods: {
         handleOpenNavModal() {
             this.$refs.modalComponent.openNavModal();
+        },
+        handleCloseModal() {
+            this.$refs.modalComponent.closeNavModal();
         },
         setTransactionId(id) {
             this.transactionUuid = id;
