@@ -15,7 +15,7 @@ export default {
         ...mapGetters('user', ['isLoggedUser'])
     },
     created() {
-        if (!this.isLoggedUser) {
+        if (!this.isLoggedUser && this.$router.currentRoute.name !== 'shoplogin') {
             this.$router.push({name: 'shoplogin'})
         }
     }
