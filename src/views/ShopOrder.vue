@@ -76,6 +76,7 @@
                                 color="secondary"
                                 size="small"
                                 variant="text"
+                                @click="cancelOrder(order.id)"
                             >
                                 <v-icon left size="small">mdi-cash-register</v-icon>
                                 Annuler
@@ -127,6 +128,13 @@ export default {
             this.fetchOrders()
         },
 
+        async cancelOrder(orderId) {
+            await this.$store.dispatch('user/cancelOrder',{
+                userId: this.loggedUser._id,
+                orderUuid: orderId
+            });
+        },
+
         formatDate(dateStr) {
             return new Date(dateStr).toLocaleDateString('fr-FR', {
                 day: '2-digit',
@@ -148,7 +156,7 @@ export default {
             const colors = {
                 pending: 'warning',
                 finalized: 'success',
-                cancelled: 'error'
+                canceled: 'error'
             }
             return colors[status] || 'grey'
         },

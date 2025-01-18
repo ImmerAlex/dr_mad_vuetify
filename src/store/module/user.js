@@ -35,6 +35,10 @@ export default {
         async addOrder({commit}, data) {
             commit('UPDATE_ORDERS', data);
         },
+        async cancelOrder({commit}, {userId, orderUuid}){
+            const response = await OrdersService.cancelOrder(userId, orderUuid);
+            commit('UPDATE_ORDERS', response.data);
+        },
         async makePayment({commit}, {userId, orderUuid, transactionUuid, transactions}) {
             const response = await OrdersService.payOrder(userId, orderUuid, transactionUuid, transactions);
 

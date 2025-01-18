@@ -42,6 +42,27 @@ async function getOrderByUuid(userId, orderUuid) {
     return response
 }
 
+async function cancelOrder(userId, orderUuid) {
+    const order = await getOrderByUuid(userId, orderUuid);
+
+    if (order.error === -1) {
+        return {
+            error: -1,
+            status: 404,
+            data: 'Commande non trouvée'
+        }
+    }
+
+    return {
+        error: 0,
+        status: 200,
+        data: {
+            ...order.data,
+            status: 'canceled',
+        }
+    }
+}
+
 async function payOrder(userId, orderUuid, transactionUuid, transactions) {
     const order = await getOrderByUuid(userId, orderUuid);
 
@@ -89,4 +110,5 @@ async function payOrder(userId, orderUuid, transactionUuid, transactions) {
 export default {
     payOrder,
     getUserOrders,
+    cancelOrder,
 }
