@@ -56,13 +56,21 @@ export default {
             let id = state.loggedBankAccount._id;
             commit('updateAccountTransactions', state.transactions.filter(t => t.account === id))
         },
-        async getAccountAmount({ commit }, number) {
+        async getAccountAmount({ commit, dispatch, state }, number) {
+            if (state.transactions.length == 0)
+                await dispatch('getAllTransactions');
+            if (state.accountTransactions.length == 0)
+                await dispatch('getAccountTransactions', number);
             let response = await BankAccountService.getAccountAmount(number)
             if (response.error === 0) {
-                commit('updateAccountAmount', response.data)
-                commit('updateAccountError', {error: 0, message: 'Solde récupéré'})
+                const totalAmount = response.data + state.accountTransactions.reduce((sum, transaction) => {
+                    return sum + transaction.amount;
+                }, 0);
+
+                commit('updateAccountAmount', totalAmount);
+                commit('updateAccountError', { error: 0, message: 'Solde récupéré' })
             } else {
-                commit('updateAccountError', {error: -1, message: response.data})
+                commit('updateAccountError', { error: -1, message: response.data })
             }
         },
         async loginToBankAccount({ commit, dispatch, state }, number) {
