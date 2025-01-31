@@ -47,6 +47,7 @@
                 <th>stock</th>
                 <th>price</th>
                 <th>number</th>
+                <th>promotion</th>
                 <th>button</th>
             </tr>
             </thead>
@@ -62,6 +63,12 @@
                 <td>
                     <input :max="item.stock" class="form-control" min="0" type="number" value="0">
                 </td>
+                <td v-if="item.promotion.length>0">
+                    <span v-for="(promo, i) in item.promotion" :key="i">
+                        <b>{{ promo.discount }}%</b> pour <i><b>{{ promo.amount }}</b></i> achetés <br/><br/>
+                    </span>
+                </td>
+                <td v-else>Aucune Promotion</td>
                 <td>
                     <button class="btn btn-primary" @click="addSelected(index)">Ajouter</button>
                 </td>
@@ -157,4 +164,3 @@ export default {
     },
 }
 </script>
-
