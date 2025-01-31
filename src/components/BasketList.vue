@@ -42,19 +42,38 @@ import {v4 as uuidv4} from 'uuid';
 import {mapActions, mapState} from "vuex";
 
 export default {
-    name: "BasketList",
-    props: {
-        cart: {
-            type: Array,
-            required: true
+  name: "BasketList",
+  props: {
+    cart: {
+      type: Array,
+      required: true
+    }
+  },
+  computed: {
+    ...mapState('user', ['loggedUser', 'userOrders']),
+    ...mapState('shop', ['viruses']),
+    total() {
+      return this.cart.reduce((acc, item) => {
+        const virus = this.viruses.find(v => v._id === item.id);
+        if (!virus) return acc + (item.price * item.quantity);
+
+        let price = virus.price;
+        let discount = 0;
+
+        if (virus.promotion && virus.promotion.length > 0) {
+            const applicablePromotions = virus.promotion
+                .filter(promo => item.quantity >= promo.amount)
+                .sort((a, b) => b.discount - a.discount);
+
+            if (applicablePromotions.length > 0) {
+                discount = applicablePromotions[0].discount;
+            }
         }
-    },
-    computed: {
-        ...mapState('user', ['loggedUser', 'userOrders']),
-        ...mapState('shop', ['viruses']),
-        total() {
-            return this.cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
-        }
+
+        const discountedPrice = price * (1 - discount / 100);
+        return acc + (discountedPrice * item.quantity);
+    }, 0);
+}
     },
     methods: {
         ...mapActions('user', ['fetchOrders', 'addOrder']),
